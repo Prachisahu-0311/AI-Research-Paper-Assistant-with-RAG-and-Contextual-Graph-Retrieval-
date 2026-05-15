@@ -1,0 +1,10 @@
+Resuming: 40 failed questions
+Vector store: 1077 chunks | Model: llama-3.1-8b-instant
+
+Run hybrid eval on 40 questions? (y/n): [ 1/40] f001 — What is multi-head attention?...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 3013.04it/s]
+          ERROR: Groq API error 429: {"error":{"message":"Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01kqzg2ewnfr7azbyfzq60jqh3` service tier `on_demand` on tokens per day (TPD): Limit 500000, Used 498609, Requested 3432. Please try again in 5m52.6848s. Need more tokens? Upgrade to Dev Tier today at https:
+[ 2/40] f006 — How does the original Transformer implement positional ...
+bash: line 1:  1314 Done                    echo y
+      1315 Killed                  | python -W ignore::Warning scripts/run_hybrid_eval.py

@@ -1,0 +1,292 @@
+[
+  {
+    "id": "f001",
+    "type": "factual",
+    "question": "What is multi-head attention?",
+    "expected_papers": ["1706.03762"],
+    "reference_answer": "Multi-head attention linearly projects queries, keys, and values h times with different learned projections, performs scaled dot-product attention in parallel on each projection (head), then concatenates and projects the results. With h=8 heads and d_model=512, each head uses d_k=d_v=64 dimensions, allowing the model to jointly attend to information from different representation subspaces at different positions."
+  },
+  {
+    "id": "f002",
+    "type": "factual",
+    "question": "What are the two pretraining tasks used in BERT?",
+    "expected_papers": ["1810.04805"],
+    "reference_answer": "BERT uses two pretraining tasks: Masked Language Model (MLM), where 15% of input tokens are randomly masked and the model must predict them from context; and Next Sentence Prediction (NSP), where the model predicts whether two text segments appear consecutively in the original corpus."
+  },
+  {
+    "id": "f003",
+    "type": "factual",
+    "question": "How many parameters does the largest GPT-3 model have?",
+    "expected_papers": ["2005.14165"],
+    "reference_answer": "The largest GPT-3 model has 175 billion parameters."
+  },
+  {
+    "id": "f004",
+    "type": "factual",
+    "question": "What two techniques does ALBERT use to reduce its parameter count compared to BERT?",
+    "expected_papers": ["1909.11942"],
+    "reference_answer": "ALBERT uses two parameter reduction techniques: factorized embedding parameterization, which decomposes the large vocabulary embedding matrix into two smaller matrices; and cross-layer parameter sharing, where all transformer layers share the same parameters, preventing parameters from growing with network depth."
+  },
+  {
+    "id": "f005",
+    "type": "factual",
+    "question": "How does DistilBERT use knowledge distillation during pretraining?",
+    "expected_papers": ["1910.01108"],
+    "reference_answer": "DistilBERT uses knowledge distillation during pretraining where a smaller student model learns from a larger BERT teacher. The training combines a distillation loss (soft cross-entropy from teacher softmax outputs), a masked language model loss, and a cosine embedding loss to align hidden state directions. The result is a model 40% smaller that retains 97% of BERT's language understanding performance."
+  },
+  {
+    "id": "f006",
+    "type": "factual",
+    "question": "How does the original Transformer implement positional encoding?",
+    "expected_papers": ["1706.03762"],
+    "reference_answer": "The original Transformer uses fixed sinusoidal positional encodings: PE(pos, 2i) = sin(pos / 10000^(2i/d_model)) and PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model)). These are added to the input embeddings before the first encoder/decoder layer, allowing the model to use relative positions."
+  },
+  {
+    "id": "f007",
+    "type": "factual",
+    "question": "What is the replaced token detection objective used in ELECTRA?",
+    "expected_papers": ["2003.05997"],
+    "reference_answer": "ELECTRA uses a generator-discriminator setup: a small masked language model generator replaces masked tokens with plausible alternatives, then a discriminator model must classify whether each token is an original token or a generator replacement. Unlike MLM which uses only the 15% masked positions, the discriminator uses every token position, making training more sample-efficient."
+  },
+  {
+    "id": "f008",
+    "type": "factual",
+    "question": "How does Longformer's sliding window attention work?",
+    "expected_papers": ["2005.00743"],
+    "reference_answer": "Longformer uses a sliding window attention where each token attends only to a fixed window of w/2 tokens on each side, giving O(n*w) complexity instead of O(n^2). It also adds global attention on select tokens like [CLS] that attend to all positions, enabling document-level reasoning while keeping most of the computation local."
+  },
+  {
+    "id": "f009",
+    "type": "factual",
+    "question": "How does XLNet's permutation language modeling differ from BERT's masked language modeling?",
+    "expected_papers": ["1906.08237"],
+    "reference_answer": "XLNet uses permutation language modeling, maximizing the expected log likelihood over all permutations of the factorization order for each sequence. This captures bidirectional context without using [MASK] tokens, avoiding BERT's pretrain-finetune discrepancy where [MASK] appears during training but not at inference. XLNet also uses a two-stream attention mechanism to separate content and query representations."
+  },
+  {
+    "id": "f010",
+    "type": "factual",
+    "question": "What is the segment-level recurrence mechanism in Transformer-XL?",
+    "expected_papers": ["1901.02860"],
+    "reference_answer": "Transformer-XL caches hidden states from the previous segment and reuses them as extended context for the current segment. During training, gradients do not flow through the cached states. This allows the effective context length to grow linearly with the number of layers. Relative positional encodings replace absolute encodings to handle the extended context across segments."
+  },
+  {
+    "id": "c001",
+    "type": "connection",
+    "question": "Which papers propose more efficient alternatives to standard quadratic self-attention?",
+    "expected_papers": ["2005.12872", "2005.00743", "2002.12327", "2001.04451", "2006.16236"],
+    "reference_answer": "Several papers address the O(n^2) complexity of full attention: Linformer approximates attention as low-rank using linear projections; Longformer uses sliding window plus global attention; Big Bird combines sparse, random, and global attention; Reformer uses locality-sensitive hashing for approximate attention; Performers use random feature maps (FAVOR+) to approximate the softmax kernel."
+  },
+  {
+    "id": "c002",
+    "type": "connection",
+    "question": "Which papers directly improve or build upon BERT's pretraining?",
+    "expected_papers": ["1907.11692", "1909.11942", "2003.05997", "1910.01108", "1906.08237"],
+    "reference_answer": "Multiple papers improve BERT: RoBERTa identifies that BERT was undertrained and improves by removing NSP, dynamic masking, more data, and longer training; ALBERT reduces parameters via factorized embeddings and cross-layer sharing; ELECTRA proposes a more sample-efficient discriminative objective; DistilBERT distills BERT into a 40% smaller model; XLNet replaces masked LM with permutation LM."
+  },
+  {
+    "id": "c003",
+    "type": "connection",
+    "question": "Which models in this corpus apply the Transformer architecture to vision tasks?",
+    "expected_papers": ["2010.11929", "2103.00020"],
+    "reference_answer": "Vision Transformer (ViT) applies a pure transformer to sequences of 16x16 image patches for image classification. CLIP trains a transformer-based image encoder jointly with a text encoder using contrastive learning on 400 million image-text pairs from the internet."
+  },
+  {
+    "id": "c004",
+    "type": "connection",
+    "question": "Which papers address the problem of Transformers being unable to process long sequences efficiently?",
+    "expected_papers": ["2005.00743", "2002.12327", "2001.04451", "2005.12872", "1901.02860"],
+    "reference_answer": "Multiple papers tackle long-sequence efficiency: Longformer uses sliding window attention; Big Bird uses structured sparse patterns with global tokens; Reformer uses locality-sensitive hashing attention; Linformer uses low-rank projections; Transformer-XL extends context via segment-level recurrence and relative positional encodings."
+  },
+  {
+    "id": "c005",
+    "type": "connection",
+    "question": "Which papers propose sparse attention patterns as an alternative to full self-attention?",
+    "expected_papers": ["2002.12327", "2005.00743", "2001.04451"],
+    "reference_answer": "Big Bird combines global, random, and sliding window attention to form a sparse pattern; Longformer uses sliding window attention with additional global tokens; Reformer uses locality-sensitive hashing to identify tokens that should attend to each other, forming a learned sparse pattern."
+  },
+  {
+    "id": "c006",
+    "type": "connection",
+    "question": "Which papers study or demonstrate extreme scaling of language models?",
+    "expected_papers": ["2005.14165", "2101.03961"],
+    "reference_answer": "GPT-3 scales a dense language model to 175 billion parameters and shows emergent few-shot learning abilities. Switch Transformers scales to trillion-parameter models using sparse mixture-of-experts routing, where each token is sent to one expert, enabling massive parameter counts with manageable compute."
+  },
+  {
+    "id": "c007",
+    "type": "connection",
+    "question": "Which papers use mixture-of-experts (MoE) architectures?",
+    "expected_papers": ["2101.03961"],
+    "reference_answer": "Switch Transformers proposes a simplified MoE Transformer where each token is routed to exactly one expert (top-1 routing) using a learned routing function. This replaces the dense feed-forward layers with expert layers, enabling trillion-parameter models while keeping per-token compute manageable."
+  },
+  {
+    "id": "c008",
+    "type": "connection",
+    "question": "Which papers use multi-modal or contrastive pretraining objectives?",
+    "expected_papers": ["2103.00020"],
+    "reference_answer": "CLIP trains a vision-language model using a contrastive loss on 400 million image-text pairs. A transformer image encoder and a transformer text encoder are jointly trained to maximize similarity between matched image-text pairs and minimize similarity between non-matched pairs."
+  },
+  {
+    "id": "c009",
+    "type": "connection",
+    "question": "Which papers propose alternatives specifically to the softmax computation in attention?",
+    "expected_papers": ["2005.12872", "2006.16236"],
+    "reference_answer": "Linformer avoids computing the full n×n softmax attention matrix by projecting keys and values to a fixed dimension k using learned linear projections. Performers use FAVOR+ (Fast Attention Via positive Orthogonal Random features) to approximate the softmax kernel using random feature maps, enabling linear-complexity attention without materializing the full matrix."
+  },
+  {
+    "id": "c010",
+    "type": "connection",
+    "question": "Which papers use a distillation or compression approach to reduce Transformer model size?",
+    "expected_papers": ["1910.01108"],
+    "reference_answer": "DistilBERT uses knowledge distillation to train a student model that is 40% smaller than BERT while retaining 97% of its performance, using a combination of distillation loss, MLM loss, and cosine embedding loss."
+  },
+  {
+    "id": "m001",
+    "type": "multi_hop",
+    "question": "How did efficient attention methods evolve chronologically from 2019 to 2021, and what core problem do they all address?",
+    "expected_papers": ["1901.02860", "2001.04451", "2005.00743", "2002.12327", "2005.12872", "2006.16236"],
+    "reference_answer": "All efficient attention methods address the O(n^2) memory and compute bottleneck of full self-attention. Transformer-XL (2019) addresses long context via segment recurrence rather than attention. Reformer (2020) uses LSH-based approximate attention. Longformer and Big Bird (2020) use structured sparse patterns. Linformer and Performers (2020) use low-rank and kernel approximations respectively, moving from heuristic sparsity to principled approximations."
+  },
+  {
+    "id": "m002",
+    "type": "multi_hop",
+    "question": "What did RoBERTa and ALBERT each discover about BERT's original training, and how do their conclusions differ?",
+    "expected_papers": ["1810.04805", "1907.11692", "1909.11942"],
+    "reference_answer": "RoBERTa found BERT was significantly undertrained and improved it with more data, dynamic masking, larger batches, longer training, and removal of NSP — achieving better performance with the same architecture. ALBERT's conclusion was different: BERT wastes parameters on redundant representations, and reducing parameters via factorized embeddings and cross-layer sharing enables training larger hidden dimensions within the same budget, achieving better performance."
+  },
+  {
+    "id": "m003",
+    "type": "multi_hop",
+    "question": "How do Reformer and Linformer each reduce attention complexity, and what assumption does each rely on?",
+    "expected_papers": ["2001.04451", "2005.12872"],
+    "reference_answer": "Reformer uses locality-sensitive hashing to bucket similar queries and keys, attending only within buckets, achieving O(n log n) complexity. Its assumption is that attention is dominated by nearby similar tokens. Linformer projects keys and values to a fixed dimension k using learned projections, achieving O(n) complexity. Its assumption is that the attention matrix is low-rank — that most attention heads can be well-approximated by a low-dimensional subspace."
+  },
+  {
+    "id": "m004",
+    "type": "multi_hop",
+    "question": "How do ViT and CLIP differ in how they use the Transformer for images, and what pretraining objective does each use?",
+    "expected_papers": ["2010.11929", "2103.00020"],
+    "reference_answer": "ViT splits images into 16x16 patches, linearly embeds each patch, and feeds the sequence to a standard Transformer encoder for image classification using supervised cross-entropy loss. CLIP trains a transformer image encoder jointly with a transformer text encoder using contrastive loss on 400M image-text pairs, learning aligned vision-language representations without task-specific labels."
+  },
+  {
+    "id": "m005",
+    "type": "multi_hop",
+    "question": "Which papers modified BERT's pretraining objective rather than its architecture, and what specific change did each make?",
+    "expected_papers": ["1907.11692", "1906.08237", "2003.05997"],
+    "reference_answer": "Three papers changed BERT's objective without fundamentally changing its architecture: RoBERTa replaces static masking with dynamic masking and removes NSP, finding these training decisions matter more than the architecture. XLNet replaces MLM with permutation language modeling to achieve bidirectional context without [MASK] tokens. ELECTRA replaces MLM with a discriminative replaced token detection objective using a generator-discriminator framework."
+  },
+  {
+    "id": "o001",
+    "type": "out_of_scope",
+    "question": "What is the capital of France?",
+    "expected_papers": [],
+    "reference_answer": "The provided sources do not contain enough information to answer this question."
+  },
+  {
+    "id": "o002",
+    "type": "out_of_scope",
+    "question": "Who won the 2020 US presidential election?",
+    "expected_papers": [],
+    "reference_answer": "The provided sources do not contain enough information to answer this question."
+  },
+  {
+    "id": "o003",
+    "type": "out_of_scope",
+    "question": "How does AlphaFold predict protein structure?",
+    "expected_papers": [],
+    "reference_answer": "The provided sources do not contain enough information to answer this question."
+  },
+  {
+    "id": "o004",
+    "type": "out_of_scope",
+    "question": "How do I set up a Python virtual environment?",
+    "expected_papers": [],
+    "reference_answer": "The provided sources do not contain enough information to answer this question."
+  },
+  {
+    "id": "o005",
+    "type": "out_of_scope",
+    "question": "What are the main differences between PyTorch and TensorFlow?",
+    "expected_papers": [],
+    "reference_answer": "The provided sources do not contain enough information to answer this question."
+  },
+
+  {"id": "c011", "type": "connection", "question": "Which papers use locality-sensitive hashing for attention?",
+   "expected_papers": ["2001.04451"],
+   "reference_answer": "The Reformer uses locality-sensitive hashing (LSH) to reduce attention complexity from O(n²) to O(n log n) by grouping similar queries and keys into hash buckets and attending only within buckets."},
+
+  {"id": "c012", "type": "connection", "question": "Which papers apply transformers to genomics or biological sequence tasks?",
+   "expected_papers": ["2002.12327"],
+   "reference_answer": "Big Bird applies sparse attention transformers to genomics tasks, demonstrating state-of-the-art results on tasks involving long DNA and biological sequences."},
+
+  {"id": "c013", "type": "connection", "question": "Which papers address training efficiency at massive model scale?",
+   "expected_papers": ["2101.03961"],
+   "reference_answer": "Switch Transformers addresses training efficiency at scale using mixture-of-experts with top-1 routing, achieving trillion-parameter scale while keeping per-token compute manageable through sparsity."},
+
+  {"id": "c014", "type": "connection", "question": "Which papers use contrastive learning as their primary training objective?",
+   "expected_papers": ["2103.00020"],
+   "reference_answer": "CLIP uses contrastive learning to train a vision-language model on 400 million image-text pairs, jointly optimizing image and text encoders to maximize similarity between matched pairs."},
+
+  {"id": "c015", "type": "connection", "question": "Which papers use permutation language modeling as a pretraining objective?",
+   "expected_papers": ["1906.08237"],
+   "reference_answer": "XLNet uses permutation language modeling, maximizing the expected log-likelihood over all permutations of the factorization order, capturing bidirectional context without [MASK] tokens."},
+
+  {"id": "c016", "type": "connection", "question": "Which papers address the pretrain-finetune discrepancy caused by masked tokens?",
+   "expected_papers": ["1906.08237", "2003.05997"],
+   "reference_answer": "XLNet eliminates [MASK] tokens by using permutation language modeling. ELECTRA addresses it with replaced token detection, using a generator-discriminator framework that never requires [MASK] at inference time."},
+
+  {"id": "c017", "type": "connection", "question": "Which papers use random feature maps to approximate the attention softmax?",
+   "expected_papers": ["2006.16236"],
+   "reference_answer": "Performers use FAVOR+ (Fast Attention Via positive Orthogonal Random features) to approximate the softmax kernel using random orthogonal feature maps, achieving linear-complexity attention."},
+
+  {"id": "c018", "type": "connection", "question": "Which papers use factorized embedding parameterization to reduce parameters?",
+   "expected_papers": ["1909.11942"],
+   "reference_answer": "ALBERT uses factorized embedding parameterization, decomposing the vocabulary embedding matrix into two smaller matrices to reduce parameter count while maintaining hidden layer size."},
+
+  {"id": "c019", "type": "connection", "question": "Which papers apply the Transformer architecture specifically to image classification?",
+   "expected_papers": ["2010.11929"],
+   "reference_answer": "Vision Transformer (ViT) applies a pure transformer to sequences of 16×16 image patches for image classification, showing transformers can match or exceed CNNs when trained on sufficient data."},
+
+  {"id": "c020", "type": "connection", "question": "Which papers address sample inefficiency in masked language model pretraining?",
+   "expected_papers": ["2003.05997"],
+   "reference_answer": "ELECTRA addresses MLM sample inefficiency using replaced token detection with a generator-discriminator framework, where the discriminator classifies every token rather than only the 15% masked positions."},
+
+  {"id": "m006", "type": "multi_hop", "question": "How do BERT and ELECTRA differ in their pretraining objectives, and which is more compute-efficient?",
+   "expected_papers": ["1810.04805", "2003.05997"],
+   "reference_answer": "BERT uses masked language modeling, predicting 15% of randomly masked tokens. ELECTRA uses replaced token detection with a generator-discriminator, classifying every token as real or replaced. ELECTRA is more compute-efficient because it uses all token positions rather than just 15%, achieving better performance with less compute."},
+
+  {"id": "m007", "type": "multi_hop", "question": "What efficiency improvements does DistilBERT make over BERT, and how does it retain most performance?",
+   "expected_papers": ["1910.01108", "1810.04805"],
+   "reference_answer": "DistilBERT uses knowledge distillation from a BERT teacher to produce a model 40% smaller that retains 97% of BERT's performance. It combines a distillation loss (soft cross-entropy from teacher logits), a masked language model loss, and a cosine embedding loss to align hidden states between student and teacher."},
+
+  {"id": "m008", "type": "multi_hop", "question": "How does Longformer's sliding window attention differ from the full self-attention in the original Transformer?",
+   "expected_papers": ["2005.00743", "1706.03762"],
+   "reference_answer": "The original Transformer uses full self-attention where every token attends to all others, giving O(n²) complexity. Longformer replaces this with sliding window attention where each token attends to w/2 tokens on each side giving O(n×w) complexity, plus global attention on select tokens like [CLS] for document-level reasoning."},
+
+  {"id": "m009", "type": "multi_hop", "question": "How does CLIP extend ViT's approach by changing the training objective and data?",
+   "expected_papers": ["2103.00020", "2010.11929"],
+   "reference_answer": "ViT applies a transformer to image patches for supervised image classification using cross-entropy loss on labeled datasets. CLIP trains a transformer image encoder jointly with a text encoder using contrastive loss on 400M unlabeled image-text pairs from the internet, enabling zero-shot transfer to new tasks without task-specific fine-tuning."},
+
+  {"id": "m010", "type": "multi_hop", "question": "How does Switch Transformers scale to parameters beyond GPT-3 while keeping compute manageable?",
+   "expected_papers": ["2101.03961", "2005.14165"],
+   "reference_answer": "GPT-3 uses a dense 175B parameter model where all parameters are active for every token. Switch Transformers uses sparse mixture-of-experts routing where each token activates only one expert, enabling trillion-parameter scale while keeping per-token compute approximately constant regardless of total parameter count."},
+
+  {"id": "f011", "type": "factual", "question": "What patch size does ViT use, and how are patches converted to tokens?",
+   "expected_papers": ["2010.11929"],
+   "reference_answer": "ViT splits images into 16×16 pixel patches, linearly projects each flattened patch into a token embedding, adds learnable positional embeddings, and feeds the resulting sequence to a standard Transformer encoder. A [CLS] token prepended to the sequence is used for final classification."},
+
+  {"id": "f012", "type": "factual", "question": "What is the FAVOR+ algorithm used by Performers and what complexity does it achieve?",
+   "expected_papers": ["2006.16236"],
+   "reference_answer": "FAVOR+ (Fast Attention Via positive Orthogonal Random features) approximates the softmax attention kernel using positive random orthogonal feature maps, allowing attention to be rewritten as a linear dot product. This achieves O(n) time and space complexity instead of O(n²), while providing an unbiased estimator of the full softmax attention."},
+
+  {"id": "f013", "type": "factual", "question": "How does the Reformer reduce memory for storing activations during backpropagation?",
+   "expected_papers": ["2001.04451"],
+   "reference_answer": "The Reformer uses reversible residual layers, where each layer's activations can be reconstructed from the outputs during backpropagation rather than being stored. This reduces activation memory from O(n × layers) to O(n), making training on very long sequences feasible."},
+
+  {"id": "f014", "type": "factual", "question": "What routing mechanism does Switch Transformers use, and why is it simpler than prior MoE approaches?",
+   "expected_papers": ["2101.03961"],
+   "reference_answer": "Switch Transformers uses top-1 routing, sending each token to exactly one expert using a learned routing function. This is simpler than prior MoE approaches using top-k routing, reducing routing computation and communication costs while still achieving efficient scaling to trillion parameters."},
+
+  {"id": "f015", "type": "factual", "question": "What dataset does CLIP train on and how large is it?",
+   "expected_papers": ["2103.00020"],
+   "reference_answer": "CLIP trains on 400 million image-text pairs collected from the internet, called WIT (WebImageText). The dataset is created by searching for image-text pairs that naturally appear together online, enabling training without task-specific labels."}
+]

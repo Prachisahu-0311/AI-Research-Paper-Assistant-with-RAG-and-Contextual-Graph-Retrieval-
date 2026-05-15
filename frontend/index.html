@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphRAG Demo — Plain RAG vs Hybrid RAG</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8f9fa; color: #212529; }
+  header { background: #1a1a2e; color: #fff; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.3rem; font-weight: 600; }
+  header span { background: #0f3460; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; color: #a8d8ea; }
+  .container { max-width: 1300px; margin: 0 auto; padding: 24px 16px; }
+  .search-box { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 24px; }
+  .search-box h2 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #495057; }
+  .input-row { display: flex; gap: 10px; }
+  textarea { flex: 1; border: 1.5px solid #dee2e6; border-radius: 8px; padding: 10px 14px; font-size: 0.95rem; resize: vertical; min-height: 60px; font-family: inherit; }
+  textarea:focus { outline: none; border-color: #6366f1; }
+  button.submit { background: #6366f1; color: #fff; border: none; border-radius: 8px; padding: 0 24px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background .15s; }
+  button.submit:hover { background: #4f46e5; }
+  button.submit:disabled { background: #a5b4fc; cursor: not-allowed; }
+  .examples { margin-top: 14px; }
+  .examples label { font-size: 0.8rem; color: #6c757d; margin-bottom: 6px; display: block; }
+  .example-group { margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .example-group .type-badge { font-size: 0.7rem; background: #e9ecef; border-radius: 4px; padding: 2px 6px; color: #495057; font-weight: 600; min-width: 72px; text-align: center; }
+  button.example { background: #fff; border: 1px solid #dee2e6; border-radius: 16px; padding: 4px 12px; font-size: 0.78rem; color: #495057; cursor: pointer; transition: border-color .15s, color .15s; }
+  button.example:hover { border-color: #6366f1; color: #6366f1; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .columns { grid-template-columns: 1fr; } }
+  .panel { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f3f4; }
+  .panel-title { font-size: 1rem; font-weight: 700; }
+  .plain .panel-title { color: #374151; }
+  .hybrid .panel-title { color: #6366f1; }
+  .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; font-weight: 600; }
+  .badge-mode { background: #ede9fe; color: #6366f1; }
+  .badge-decomposed { background: #fef3c7; color: #d97706; }
+  .badge-hybrid { background: #d1fae5; color: #059669; }
+  .badge-vector { background: #e0e7ff; color: #4338ca; }
+  .badge-threshold { background: #fee2e2; color: #dc2626; }
+  .meta { font-size: 0.75rem; color: #6c757d; margin-bottom: 14px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta span { display: flex; align-items: center; gap: 4px; }
+  .grounded-yes { color: #059669; }
+  .grounded-no { color: #dc2626; }
+  .answer-box { background: #f8f9fa; border-radius: 8px; padding: 14px; font-size: 0.88rem; line-height: 1.65; white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow-y: auto; }
+  .section-label { font-size: 0.72rem; font-weight: 700; color: #6c757d; text-transform: uppercase; letter-spacing: .05em; margin: 14px 0 6px; }
+  .paper-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 0.72rem; border-radius: 12px; padding: 3px 10px; }
+  .chip-plain { background: #f1f3f4; color: #374151; border: 1px solid #e5e7eb; }
+  .chip-graph { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+  .chip-hybrid-only { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+  .sub-questions { font-size: 0.8rem; color: #4b5563; }
+  .sub-questions li { margin-bottom: 4px; }
+  .diff-box { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-top: 16px; border-left: 4px solid #6366f1; }
+  .diff-box h3 { font-size: 0.9rem; font-weight: 700; color: #4338ca; margin-bottom: 10px; }
+  .diff-box p { font-size: 0.83rem; color: #4b5563; line-height: 1.6; }
+  .error-box { background: #fee2e2; border-radius: 8px; padding: 14px; color: #991b1b; font-size: 0.88rem; margin-top: 16px; }
+  .loading { text-align: center; padding: 40px; color: #6c757d; font-size: 0.9rem; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #e5e7eb; border-top-color: #6366f1; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #results { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>GraphRAG Demo</h1>
+  <span>Knowledge Graph + Vector Search</span>
+</header>
+
+<div class="container">
+  <div class="search-box">
+    <h2>Ask a question about AI research papers</h2>
+    <div class="input-row">
+      <textarea id="question" placeholder="e.g. Which papers build on BERT? or How does the Reformer reduce memory?"></textarea>
+      <button class="submit" id="submitBtn" onclick="runQuery()">Ask</button>
+    </div>
+    <div class="examples">
+      <label>Try an example:</label>
+      <div class="example-group">
+        <span class="type-badge">Factual</span>
+        <button class="example" onclick="fillQ(this)">What is multi-head attention?</button>
+        <button class="example" onclick="fillQ(this)">How many parameters does GPT-3 have?</button>
+        <button class="example" onclick="fillQ(this)">How does DistilBERT use knowledge distillation?</button>
+      </div>
+      <div class="example-group">
+        <span class="type-badge">Connection</span>
+        <button class="example" onclick="fillQ(this)">Which papers build on BERT?</button>
+        <button class="example" onclick="fillQ(this)">Which papers address the quadratic attention complexity problem?</button>
+        <button class="example" onclick="fillQ(this)">Which papers apply Transformers to vision tasks?</button>
+      </div>
+      <div class="example-group">
+        <span class="type-badge">Multi-hop</span>
+        <button class="example" onclick="fillQ(this)">How do Reformer and Linformer each reduce attention complexity?</button>
+        <button class="example" onclick="fillQ(this)">What did RoBERTa and ALBERT each discover about BERT training?</button>
+        <button class="example" onclick="fillQ(this)">How did efficient attention methods evolve from 2019 to 2021?</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" style="display:none" class="loading">
+    <span class="spinner"></span>Running both pipelines — this takes ~30 seconds…
+  </div>
+  <div id="error-box" class="error-box" style="display:none"></div>
+
+  <div id="results">
+    <div class="columns">
+      <!-- Plain RAG -->
+      <div class="panel plain">
+        <div class="panel-header">
+          <div class="panel-title">Plain RAG</div>
+          <span class="badge badge-vector">Vector only</span>
+        </div>
+        <div class="meta">
+          <span id="plain-latency"></span>
+          <span id="plain-tokens"></span>
+          <span id="plain-grounded"></span>
+        </div>
+        <div class="answer-box" id="plain-answer"></div>
+        <div class="section-label">Papers retrieved</div>
+        <div class="paper-chips" id="plain-papers"></div>
+      </div>
+
+      <!-- Hybrid RAG -->
+      <div class="panel hybrid">
+        <div class="panel-header">
+          <div class="panel-title">Hybrid RAG</div>
+          <span class="badge badge-mode" id="hybrid-mode-badge"></span>
+        </div>
+        <div class="meta">
+          <span id="hybrid-latency"></span>
+          <span id="hybrid-tokens"></span>
+          <span id="hybrid-grounded"></span>
+        </div>
+        <div id="sub-q-section" style="display:none">
+          <div class="section-label">Decomposed into sub-questions</div>
+          <ul class="sub-questions" id="sub-questions"></ul>
+        </div>
+        <div class="answer-box" id="hybrid-answer"></div>
+        <div class="section-label">Papers retrieved</div>
+        <div class="paper-chips" id="hybrid-papers"></div>
+      </div>
+    </div>
+
+    <!-- Why hybrid differs -->
+    <div class="diff-box" id="diff-box" style="display:none">
+      <h3>Why Hybrid RAG retrieved different papers</h3>
+      <p id="diff-text"></p>
+      <div class="section-label" style="margin-top:10px">Papers found only by graph traversal</div>
+      <div class="paper-chips" id="graph-only-papers"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Empty string = relative URL, works on any host (localhost or Railway)
+  const API_URL = "";
+
+  function fillQ(btn) {
+    document.getElementById("question").value = btn.textContent;
+  }
+
+  function modeBadgeClass(mode) {
+    if (mode === "hybrid") return "badge-hybrid";
+    if (mode === "decomposed") return "badge-decomposed";
+    if (mode === "below_threshold") return "badge-threshold";
+    return "badge-vector";
+  }
+
+  function modeLabel(mode) {
+    const labels = {
+      hybrid: "Graph + Vector",
+      decomposed: "Decomposed",
+      vector_only: "Vector only",
+      below_threshold: "Below threshold",
+    };
+    return labels[mode] || mode;
+  }
+
+  async function runQuery() {
+    const q = document.getElementById("question").value.trim();
+    if (!q) return;
+
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("results").style.display = "none";
+    document.getElementById("error-box").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+
+    try {
+      const res = await fetch(`${API_URL}/query`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, use_hyde: true }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || `HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      render(data);
+    } catch (e) {
+      document.getElementById("error-box").textContent = `Error: ${e.message}`;
+      document.getElementById("error-box").style.display = "block";
+    } finally {
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("submitBtn").disabled = false;
+    }
+  }
+
+  function render(data) {
+    const plain = data.plain_rag;
+    const hybrid = data.hybrid_rag;
+    const cmp = data.comparison;
+
+    // Plain side
+    document.getElementById("plain-answer").textContent = plain.answer;
+    document.getElementById("plain-latency").textContent = `⏱ ${plain.latency_ms}ms`;
+    document.getElementById("plain-tokens").textContent = `🔤 ${plain.tokens_used} tokens`;
+    const pg = document.getElementById("plain-grounded");
+    pg.innerHTML = plain.grounded
+      ? '<span class="grounded-yes">✓ Grounded</span>'
+      : '<span class="grounded-no">⚠ Ungrounded claims</span>';
+
+    const plainPapers = document.getElementById("plain-papers");
+    plainPapers.innerHTML = "";
+    (cmp.plain_papers || []).forEach(p => {
+      const chip = document.createElement("span");
+      chip.className = "chip chip-plain";
+      chip.textContent = p;
+      plainPapers.appendChild(chip);
+    });
+
+    // Hybrid side
+    document.getElementById("hybrid-answer").textContent = hybrid.answer;
+    document.getElementById("hybrid-latency").textContent = `⏱ ${hybrid.latency_ms}ms`;
+    document.getElementById("hybrid-tokens").textContent = `🔤 ${hybrid.tokens_used} tokens`;
+    const hg = document.getElementById("hybrid-grounded");
+    hg.innerHTML = hybrid.grounded
+      ? '<span class="grounded-yes">✓ Grounded</span>'
+      : '<span class="grounded-no">⚠ Ungrounded claims</span>';
+
+    const modeBadge = document.getElementById("hybrid-mode-badge");
+    modeBadge.textContent = modeLabel(hybrid.retrieval_mode);
+    modeBadge.className = `badge ${modeBadgeClass(hybrid.retrieval_mode)}`;
+
+    // Sub-questions
+    const subSection = document.getElementById("sub-q-section");
+    const subList = document.getElementById("sub-questions");
+    subList.innerHTML = "";
+    if (hybrid.sub_questions && hybrid.sub_questions.length > 0) {
+      hybrid.sub_questions.forEach(sq => {
+        const li = document.createElement("li");
+        li.textContent = sq;
+        subList.appendChild(li);
+      });
+      subSection.style.display = "block";
+    } else {
+      subSection.style.display = "none";
+    }
+
+    const hybridPapers = document.getElementById("hybrid-papers");
+    hybridPapers.innerHTML = "";
+    const graphSet = new Set(cmp.graph_found || []);
+    const hybridOnlySet = new Set(cmp.hybrid_only_papers || []);
+    (cmp.hybrid_papers || []).forEach(p => {
+      const chip = document.createElement("span");
+      if (graphSet.has(p)) chip.className = "chip chip-graph";
+      else if (hybridOnlySet.has(p)) chip.className = "chip chip-hybrid-only";
+      else chip.className = "chip chip-plain";
+      chip.textContent = p;
+      hybridPapers.appendChild(chip);
+    });
+
+    // Diff box
+    const diffBox = document.getElementById("diff-box");
+    const graphOnly = cmp.hybrid_only_papers || [];
+    if (graphOnly.length > 0 || (cmp.graph_found && cmp.graph_found.length > 0)) {
+      const mode = hybrid.retrieval_mode;
+      let explanation = "";
+      if (mode === "hybrid") {
+        explanation = `The knowledge graph identified ${(cmp.graph_found || []).length} relevant paper(s) based on relationships in the graph, then used scoped vector search within those papers. This surfaces papers that semantic similarity alone might miss.`;
+      } else if (mode === "decomposed") {
+        explanation = `This question was decomposed into ${(hybrid.sub_questions || []).length} sub-questions, each retrieved separately. This allows synthesis across multiple papers simultaneously.`;
+      }
+      document.getElementById("diff-text").textContent = explanation;
+
+      const graphOnlyDiv = document.getElementById("graph-only-papers");
+      graphOnlyDiv.innerHTML = "";
+      graphOnly.forEach(p => {
+        const chip = document.createElement("span");
+        chip.className = "chip chip-graph";
+        chip.textContent = p;
+        graphOnlyDiv.appendChild(chip);
+      });
+
+      diffBox.style.display = "block";
+    } else {
+      diffBox.style.display = "none";
+    }
+
+    document.getElementById("results").style.display = "block";
+    document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // Allow Enter to submit (Shift+Enter for newline)
+  document.getElementById("question").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); runQuery(); }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.env
+data/papers/
+data/processed/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+*.egg-info/
+.pytest_cache/
+notebooks/.ipynb_checkpoints/
+# Keep raw_triples.json (needed for graph at runtime)
+data/graph/extracted_triples_*.json
+data/graph/raw_triples_backup*.json

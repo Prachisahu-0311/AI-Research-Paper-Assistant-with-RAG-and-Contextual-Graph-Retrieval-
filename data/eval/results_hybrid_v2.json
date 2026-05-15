@@ -1,0 +1,901 @@
+[
+  {
+    "id": "f001",
+    "type": "factual",
+    "question": "What is multi-head attention?",
+    "answer": "The multi-head attention mechanism is described in the following sources:\n\n[Source 3] Chunk 5:\n\"Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.\"\n\n[Source 3] Chunk 5:\n\"MultiHead(Q, K, V ) = Concat(head 1, ..., headh)W O\nwhere headi = Attention(QW Q\ni , KW K\ni , V W V\ni )\nWhere the projections are parameter matricesW Q\ni ∈ Rdmodel×dk, W K\ni ∈ Rdmodel×dk, W V\ni ∈ Rdmodel×dv\nand W O ∈ Rhdv×dmodel.\"\n\n[Source 1] Chunk 20:\n\"A Appendix\nA.1 Preliminaries: Multi-head attention layers\nSince our model is based on the Transformer architecture, we remind here the general form of attention mechanisms we use for exhaustivity. The attention mechanism follows [47], except for the details of positional encodings (see Equation 8) that follows [7].\nMulti-head The general form of multi-head attention withM heads of dimension d is a function with the following signature (using d′ = d\nM , and giving matrix/tensors sizes in underbrace)\nmh-attn : Xq\nd×Nq\n, Xkv\nd×Nkv\n, T\nM×3×d′×d\n, L\nd×d\n↦→ ˜Xq\nd×Nq\n(3)\nwhere Xq is the query sequence of length Nq, Xkv is the key-value sequence of lengthNkv (with the same number of channels d for simplicity of exposition), T\nis the weight tensor to compute the so-called query, key and value embeddings, andL is a projection matrix. The output is the same size as the query sequence.\"\n\nThe multi-head attention mechanism involves multiple attention heads, each of which attends to different representation subspaces at different positions. The output of each head is then concatenated and projected to produce the final output.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides a mostly correct description of multi-head attention, but lacks a clear explanation of the parallelization process and the specific dimensions used in the reference answer.",
+    "latency_ms": 17281.4,
+    "rag_tokens": 3430,
+    "judge_tokens": 1016,
+    "retrieved_papers": [
+      "2005.12872",
+      "2002.12327",
+      "1706.03762",
+      "1901.02860",
+      "2002.12327"
+    ],
+    "expected_papers": [
+      "1706.03762"
+    ]
+  },
+  {
+    "id": "f002",
+    "type": "factual",
+    "question": "What are the two pretraining tasks used in BERT?",
+    "answer": "The two pretraining tasks used in BERT are:\n\n1. Masked Language Modeling (MLM) [Source 3]\n2. Next Sentence Prediction (NSP) [Source 3]\n\nNote that the sources do not explicitly mention the tasks used in the other papers, so we cannot confirm the pretraining tasks used in RoBERTa or Big Bird.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system accurately identifies the two pretraining tasks used in BERT and properly cites the source.",
+    "latency_ms": 17808.8,
+    "rag_tokens": 2998,
+    "judge_tokens": 566,
+    "retrieved_papers": [
+      "1810.04805",
+      "1907.11692",
+      "2002.12327",
+      "1810.04805",
+      "1810.04805"
+    ],
+    "expected_papers": [
+      "1810.04805"
+    ]
+  },
+  {
+    "id": "f003",
+    "type": "factual",
+    "question": "How many parameters does the largest GPT-3 model have?",
+    "answer": "The largest GPT-3 model has 175.0 billion parameters [Source 2].",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system provided a correct and complete answer with proper citation.",
+    "latency_ms": 9594.7,
+    "rag_tokens": 2879,
+    "judge_tokens": 459,
+    "retrieved_papers": [
+      "2005.14165",
+      "2005.14165",
+      "2005.14165",
+      "2005.14165",
+      "2005.14165"
+    ],
+    "expected_papers": [
+      "2005.14165"
+    ]
+  },
+  {
+    "id": "f004",
+    "type": "factual",
+    "question": "What two techniques does ALBERT use to reduce its parameter count compared to BERT?",
+    "answer": "ALBERT uses two techniques to reduce its parameter count compared to BERT: \n\n1. Factorized embedding parameterization [Source 3, Chunk 5]. This is achieved by untieing the WordPiece embedding size E from the hidden layer size H, allowing for more flexible and context-dependent representations.\n2. Cross-layer parameter sharing [Source 5, Chunk 14]. This is achieved by sharing parameters across layers, which reduces the overall number of parameters in the model.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "ALBERT",
+      "DistilBERT"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system accurately describes the two techniques used by ALBERT to reduce its parameter count and provides proper citations.",
+    "latency_ms": 10018.3,
+    "rag_tokens": 2959,
+    "judge_tokens": 586,
+    "retrieved_papers": [
+      "1909.11942",
+      "1909.11942",
+      "1909.11942",
+      "1909.11942",
+      "1909.11942"
+    ],
+    "expected_papers": [
+      "1909.11942"
+    ]
+  },
+  {
+    "id": "f005",
+    "type": "factual",
+    "question": "How does DistilBERT use knowledge distillation during pretraining?",
+    "answer": "How does DistilBERT use knowledge distillation during pretraining?\n\nDistilBERT uses knowledge distillation during pretraining by leveraging the full teacher distribution to provide a rich training signal [Source 5]. The student is trained with a distillation loss over the soft target probabilities of the teacher: Lce = ∑ i ti∗ log(si) where ti (resp. si) is a probability estimated by the teacher (resp. the student) [Source 5]. This objective results in a rich training signal by leveraging the full teacher distribution.\n\nAdditionally, DistilBERT uses a triple loss combining language modeling, distillation, and cosine-distance losses [Source 4]. The final training objective is a linear combination of the distillation loss Lce with the supervised training loss, in this case, the masked language modeling loss Lmlm [Devlin et al., 2018] [Source 5]. The cosine embedding loss (Lcos) is also added to align the directions of the student and teacher hidden states vectors [Source 5].\n\nIt's worth noting that the sources do not provide a detailed explanation of how the teacher's knowledge is used during pretraining, but they do mention that the teacher's knowledge is used to provide a rich training signal and to align the directions of the student and teacher hidden states vectors.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "ALBERT",
+      "DistilBERT"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system provides a detailed and accurate explanation of how DistilBERT uses knowledge distillation during pretraining, supported by multiple high-quality citations.",
+    "latency_ms": 10178.5,
+    "rag_tokens": 3127,
+    "judge_tokens": 789,
+    "retrieved_papers": [
+      "1910.01108",
+      "1910.01108",
+      "1910.01108",
+      "1910.01108",
+      "1910.01108"
+    ],
+    "expected_papers": [
+      "1910.01108"
+    ]
+  },
+  {
+    "id": "f006",
+    "type": "factual",
+    "question": "How does the original Transformer implement positional encoding?",
+    "answer": "The original Transformer implements positional encoding by adding the positional encodings to the word embeddings element-wise. This is described in [Source 5, Chunk 3] as \"the actual input to the Transformer is the element-wise addition of the word embeddings and the positional encodings.\"\n\nThe positional encodings are denoted as U ∈ RLmax×d, where the i-th row Ui corresponds to the i-th absolute position within a segment and Lmax prescribes the maximum possible length to be modeled. This is described in [Source 1, Chunk 8].\n\nThe original Transformer uses a sinusoidal positional encoding, which is adapted in [Source 2, Chunk 11] to a relative positional embedding R that also uses the sinusoidal formulation. This is a modification to the original Transformer's positional encoding.\n\nThe provided sources do not contain enough information to answer how the original Transformer implements positional encoding in detail, such as the specific formula used for the sinusoidal positional encoding.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system accurately describes the original Transformer's positional encoding method and provides relevant citations, but notes the lack of information in the sources regarding the specific formula used.",
+    "latency_ms": 10337.9,
+    "rag_tokens": 3100,
+    "judge_tokens": 713,
+    "retrieved_papers": [
+      "1901.02860",
+      "1901.02860",
+      "2003.05997",
+      "1807.03819",
+      "1706.03762"
+    ],
+    "expected_papers": [
+      "1706.03762"
+    ]
+  },
+  {
+    "id": "f007",
+    "type": "factual",
+    "question": "What is the replaced token detection objective used in ELECTRA?",
+    "answer": "The provided sources do not contain enough information to answer this question.",
+    "retrieval_mode": "below_threshold",
+    "graph_papers_used": [
+      "ELECTRA"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledges the lack of information in the provided sources.",
+    "latency_ms": 52.9,
+    "rag_tokens": 0,
+    "judge_tokens": 506,
+    "retrieved_papers": [
+      "2003.05997",
+      "2003.05997",
+      "2003.05997",
+      "2003.05997",
+      "2003.05997"
+    ],
+    "expected_papers": [
+      "2003.05997"
+    ]
+  },
+  {
+    "id": "f008",
+    "type": "factual",
+    "question": "How does Longformer's sliding window attention work?",
+    "answer": "The provided sources do not contain enough information to explain how Longformer's sliding window attention works.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 0.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledges the limitation of the available sources and refuses to provide an answer.",
+    "latency_ms": 9813.8,
+    "rag_tokens": 2935,
+    "judge_tokens": 516,
+    "retrieved_papers": [
+      "1901.02860",
+      "1901.02860",
+      "2005.12872",
+      "2002.12327",
+      "1706.03762"
+    ],
+    "expected_papers": [
+      "2005.00743"
+    ]
+  },
+  {
+    "id": "f009",
+    "type": "factual",
+    "question": "How does XLNet's permutation language modeling differ from BERT's masked language modeling?",
+    "answer": "XLNet's permutation language modeling differs from BERT's masked language modeling in the following ways:\n\nXLNet's permutation language modeling is not explicitly described in the provided sources. However, we can infer some differences from the descriptions of BERT's masked language modeling.\n\nBERT's masked language modeling [Source 1, 2] involves randomly selecting a sample of tokens in the input sequence and replacing them with the special token [MASK]. The model is then trained to predict the masked tokens.\n\nIn contrast, XLNet's permutation language modeling is not described in the provided sources. However, we can look at the description of XLNet's training procedure in [Source 5, Chunk 31], which mentions that XLNet uses a permutation-based approach to generate training input sequences. This approach involves sampling two spans of text from the corpus and applying a permutation to the input sequence.\n\nThe provided sources do not contain enough information to answer the question of how XLNet's permutation language modeling differs from BERT's masked language modeling.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "RoBERTa",
+      "BERT"
+    ],
+    "retrieval_recall": 0.0,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system correctly identifies the lack of information in the provided sources and provides a clear explanation of the limitations.",
+    "latency_ms": 10372.3,
+    "rag_tokens": 3093,
+    "judge_tokens": 717,
+    "retrieved_papers": [
+      "1907.11692",
+      "1907.11692",
+      "1907.11692",
+      "1810.04805",
+      "1810.04805"
+    ],
+    "expected_papers": [
+      "1906.08237"
+    ]
+  },
+  {
+    "id": "f010",
+    "type": "factual",
+    "question": "What is the segment-level recurrence mechanism in Transformer-XL?",
+    "answer": "The segment-level recurrence mechanism in Transformer-XL is described in [Source 3] Chunk 7. \n\nThe mechanism is illustrated in Figure 2, which shows the Transformer-XL model with a segment length of 4. The largest possible dependency length grows linearly with the number of layers and the segment length, i.e., O(N× L). This is analogous to truncated BPTT, but instead of caching the last hidden state, Transformer-XL caches a sequence of hidden states. \n\nDuring evaluation, the representations from the previous segments can be reused instead of being computed from scratch, leading to a significant speedup. In experiments on enwiki8, Transformer-XL achieves an up to 1,800+ times speedup during evaluation compared to the vanilla model. \n\nThe recurrence scheme can also be extended to cache multiple previous segments, and the memory can be referred to as the memory mn. The segment length can be increased by multiple times during evaluation, and the model can be trained with a segment length equal to the number of layers during training.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 0,
+    "total_score": 5,
+    "judge_reasoning": "The system answer accurately describes the segment-level recurrence mechanism in Transformer-XL, but fails to provide proper citations.",
+    "latency_ms": 10356.3,
+    "rag_tokens": 3112,
+    "judge_tokens": 716,
+    "retrieved_papers": [
+      "1901.02860",
+      "1901.02860",
+      "1901.02860",
+      "2003.05997",
+      "1807.03819"
+    ],
+    "expected_papers": [
+      "1901.02860"
+    ]
+  },
+  {
+    "id": "c001",
+    "type": "connection",
+    "question": "Which papers propose more efficient alternatives to standard quadratic self-attention?",
+    "answer": "Based on the provided sources, the following papers propose more efficient alternatives to standard quadratic self-attention:\n\n1. **Child et al. (2019)**: Introduced sparse factorizations of the attention matrix to reduce the self-attention complexity to O(N√N) [Source 1, Chunk 4.2.2; Source 3, Chunk 3; Source 4, Chunk 1].\n2. **Kitaev et al. (2020)**: Proposed Reformer, which further reduces complexity to O(N logN) using locality-sensitive hashing [Source 3, Chunk 3; Source 4, Chunk 1].\n3. **Raganato et al. (2020)**: Proposed using fixed (i.e., not learned) attention patterns in Transformer encoders [Source 2, Chunk 4].\n4. **Tolstikhin et al. (2021)**: Proposed All-MLP architectures for vision, which can be seen as a form of Random Synthesizers [Source 2, Chunk 4].\n5. **Cordonnier et al. (2020)**: Provided a theoretical understanding of self-attention and proposed a kernel-based formulation to speed up the calculation of self-attention [Source 3, Chunk 2.2].\n6. **Katharopoulos et al. (2020)**: Introduced the linear transformer model, which significantly reduces the memory footprint and scales linearly with respect to the context length [Source 4, Chunk 1].\n\nNote that these papers propose different approaches to improve the efficiency of self-attention, and some of them may have overlapping ideas or contributions.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Big Bird",
+      "Reformer",
+      "Performers",
+      "Linformer",
+      "Longformer"
+    ],
+    "retrieval_recall": 0.6,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides a mostly correct list of papers proposing efficient alternatives to standard quadratic self-attention, but some papers mentioned in the reference answer are not included in the system's answer.",
+    "latency_ms": 10918.4,
+    "rag_tokens": 3254,
+    "judge_tokens": 862,
+    "retrieved_papers": [
+      "2002.12327",
+      "2005.00743",
+      "2006.16236",
+      "2006.16236",
+      "2002.12327"
+    ],
+    "expected_papers": [
+      "2005.12872",
+      "2005.00743",
+      "2002.12327",
+      "2001.04451",
+      "2006.16236"
+    ]
+  },
+  {
+    "id": "c002",
+    "type": "connection",
+    "question": "Which papers directly improve or build upon BERT's pretraining?",
+    "answer": "Based on the provided sources, the following papers directly improve or build upon BERT's pretraining:\n\n1. **RoBERTa: A Robustly Optimized BERT (1907.11692)**: This paper proposes an improved recipe for training BERT models, which they call RoBERTa. They modify the original BERT pretraining approach by training the model longer, with bigger batches, over more data, removing the next sentence prediction objective, training on longer sequences, and dynamically changing the masking pattern applied to the training data. [Source 3]\n2. **Big Bird: Transformers for Longer Sequences (2002.12327)**: This paper does not directly improve or build upon BERT's pretraining. However, it does mention that several studies have explored improving the fine-tuning of BERT, including taking more layers into account, two-stage fine-tuning, and other modifications. [Source 4]\n3. **It's Not Just Size That Matters (PET) (2003.10555)**: This paper does not directly improve or build upon BERT's pretraining. However, it does compare the performance of BERT and ELECTRA, a model that is essentially a combination of BERT and ELECTRA. The results show that ELECTRA outperforms BERT in some cases, but the paper does not propose any modifications to BERT's pretraining approach. [Source 5]\n\nNote that while Big Bird and It's Not Just Size That Matters (PET) do not directly improve or build upon BERT's pretraining, they do provide additional insights and modifications to BERT's fine-tuning approach.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "RoBERTa",
+      "ELECTRA",
+      "ALBERT",
+      "XLNet",
+      "Big Bird",
+      "DistilBERT",
+      "PET"
+    ],
+    "retrieval_recall": 0.2,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides a mostly correct list of papers that improve or build upon BERT's pretraining, but incorrectly includes Big Bird and PET as not directly improving BERT's pretraining.",
+    "latency_ms": 10682.6,
+    "rag_tokens": 3284,
+    "judge_tokens": 867,
+    "retrieved_papers": [
+      "1907.11692",
+      "2002.12327",
+      "1907.11692",
+      "2002.12327",
+      "2003.10555"
+    ],
+    "expected_papers": [
+      "1907.11692",
+      "1909.11942",
+      "2003.05997",
+      "1910.01108",
+      "1906.08237"
+    ]
+  },
+  {
+    "id": "c003",
+    "type": "connection",
+    "question": "Which models in this corpus apply the Transformer architecture to vision tasks?",
+    "answer": "The models that apply the Transformer architecture to vision tasks are:\n\n1. Vision Transformer (ViT) [Source 1]\n2. Vision Transformer (ViT) [Source 2]\n3. Vision Transformer (ViT) [Source 4]\n4. Vision Transformer (ViT) [Source 5]\n\nThese models are all referred to as Vision Transformer (ViT) and are described in the sources as applying the Transformer architecture directly to images, with the fewest possible modifications.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "CLIP",
+      "ViT"
+    ],
+    "retrieval_recall": 0.5,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system's answer is mostly correct, but it incorrectly cites multiple sources for the same model, and the description of the models is accurate.",
+    "latency_ms": 10240.7,
+    "rag_tokens": 2962,
+    "judge_tokens": 593,
+    "retrieved_papers": [
+      "2010.11929",
+      "2010.11929",
+      "2010.11929",
+      "2010.11929",
+      "2010.11929"
+    ],
+    "expected_papers": [
+      "2010.11929",
+      "2103.00020"
+    ]
+  },
+  {
+    "id": "c004",
+    "type": "connection",
+    "question": "Which papers address the problem of Transformers being unable to process long sequences efficiently?",
+    "answer": "Based on the provided sources, the following papers address the problem of Transformers being unable to process long sequences efficiently:\n\n1. [Source 1] Paper: Rethinking Attention with Performers (2006.16236) - This paper proposes a linear transformer model that can process long sequences efficiently by reducing the complexity from O(N^2) to O(N), where N is the sequence length. The authors show that their model achieves similar performance to vanilla transformers and is up to 4000x faster on autoregressive prediction of very long sequences.\n2. [Source 2] Paper: Reformer: The Efficient Transformer (2001.04451) - This paper introduces two techniques to improve the efficiency of Transformers: replacing dot-product attention with locality-sensitive hashing and using reversible residual layers. The resulting model, the Reformer, performs on par with Transformer models while being much more memory-efficient and much faster on long sequences.\n3. [Source 5] Paper: Rethinking Attention with Performers (2006.16236) - This paper also addresses the problem of Transformers being unable to process long sequences efficiently by proposing a linear transformer model that can be parallelized and take full advantage of GPUs or other accelerators. The authors show that their model can store the φ(Kj)VTj matrix as an internal state and update it at every time step like a recurrent neural network, resulting in inference thousands of times faster than other transformer models.\n\nThe provided sources do not contain enough information to determine if [Source 4] Paper: Longformer: The Long-Document Transformer (2005.00743) addresses the problem of Transformers being unable to process long sequences efficiently.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Big Bird",
+      "Reformer",
+      "Performers",
+      "Linformer",
+      "Longformer"
+    ],
+    "retrieval_recall": 0.4,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides mostly correct information with minor errors, and its citations are accurate and properly attributed, but it incorrectly cites the same paper twice.",
+    "latency_ms": 10501.3,
+    "rag_tokens": 3269,
+    "judge_tokens": 840,
+    "retrieved_papers": [
+      "2006.16236",
+      "2001.04451",
+      "2006.16236",
+      "2005.00743",
+      "2006.16236"
+    ],
+    "expected_papers": [
+      "2005.00743",
+      "2002.12327",
+      "2001.04451",
+      "2005.12872",
+      "1901.02860"
+    ]
+  },
+  {
+    "id": "c005",
+    "type": "connection",
+    "question": "Which papers propose sparse attention patterns as an alternative to full self-attention?",
+    "answer": "Based on the provided sources, the following papers propose sparse attention patterns as an alternative to full self-attention:\n\n1. [Source 2] Paper: Rethinking Attention with Performers (2006.16236) - This paper introduces the linear transformer model, which reduces the memory footprint and scales linearly with respect to the context length by using a kernel-based formulation of self-attention and the associative property of matrix products. [Source 2, Chunk 1]\n2. [Source 5] Paper: Rethinking Attention with Performers (2006.16236) - This paper also mentions that Child et al. (2019) introduced sparse factorizations of the attention matrix to reduce the self-attention complexity to O(N√N). [Source 5, Chunk 3]\n3. [Source 4] Paper: Longformer: The Long-Document Transformer (2005.00743) - This paper mentions that Child et al. (2019) and Kitaev et al. (2020) proposed methods to sparsify the attention mechanism, reducing the complexity of computing the alignment matrix. [Source 4, Chunk 4]\n4. [Source 5] Paper: Rethinking Attention with Performers (2006.16236) - This paper also mentions that Kitaev et al. (2020) proposed Reformer, which further reduces complexity to O(N logN) by using locality-sensitive hashing (LSH) to perform fewer dot products. [Source 5, Chunk 3]\n\nNote that the other papers mentioned in the sources do not propose sparse attention patterns as an alternative to full self-attention.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Big Bird",
+      "Reformer",
+      "Performers",
+      "Linformer",
+      "Longformer"
+    ],
+    "retrieval_recall": 0.6666666666666666,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides mostly correct information about sparse attention patterns, but incorrectly cites the year of the Performers paper and fails to mention Big Bird and Longformer.",
+    "latency_ms": 10422.2,
+    "rag_tokens": 3278,
+    "judge_tokens": 838,
+    "retrieved_papers": [
+      "2002.12327",
+      "2006.16236",
+      "2002.12327",
+      "2005.00743",
+      "2006.16236"
+    ],
+    "expected_papers": [
+      "2002.12327",
+      "2005.00743",
+      "2001.04451"
+    ]
+  },
+  {
+    "id": "c006",
+    "type": "connection",
+    "question": "Which papers study or demonstrate extreme scaling of language models?",
+    "answer": "Based on the provided sources, the following papers study or demonstrate extreme scaling of language models:\n\n1. [Source 3] Paper: Language Models are Few-Shot Learners (GPT-3) (2005.14165) - This paper studies the effect of scale on language model performance and finds a smooth power-law trend in loss as autoregressive language models are scaled up. It also increases model size 10x beyond previous models that employ this strategy.\n2. [Source 4] Paper: Language Models are Few-Shot Learners (GPT-3) (2005.14165) - This paper also discusses the trend of increasing model size and its impact on language model performance. It mentions that recent efforts have increased model size from 100 million parameters to 17 billion parameters, and that log loss follows a smooth trend of improvement with scale.\n3. [Source 1] Paper: Language Models are Few-Shot Learners (GPT-3) (2005.14165) - This paper mentions that several lines of work have focused on increasing parameter count and/or computation in language models as a means to improve generative or task performance. It also mentions that work in this vein has successively increased model size, including models with 213 million, 300 million, 1.5 billion, 8 billion, 11 billion, and 17 billion parameters.\n\nThe provided sources do not contain enough information to determine which paper demonstrates extreme scaling of language models in the most extreme way.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 0.5,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides mostly correct information, but incorrectly cites the same paper multiple times and fails to identify the most extreme scaling of language models.",
+    "latency_ms": 10587.3,
+    "rag_tokens": 3239,
+    "judge_tokens": 804,
+    "retrieved_papers": [
+      "2005.14165",
+      "2103.00020",
+      "2005.14165",
+      "2005.14165",
+      "2001.04451"
+    ],
+    "expected_papers": [
+      "2005.14165",
+      "2101.03961"
+    ]
+  },
+  {
+    "id": "c007",
+    "type": "connection",
+    "question": "Which papers use mixture-of-experts (MoE) architectures?",
+    "answer": "Based on the provided sources, the following papers use mixture-of-experts (MoE) architectures:\n\n1. [Source 2, Chunk 24] - This paper studies a specific model in a class of methods that do conditional computation, where computation decisions are made dynamically based on the input. It mentions that Mixture of Experts (MoE), in the context of modern deep learning architectures, was proven effective in Shazeer et al. (2017).\n2. [Source 2, Chunk 24] - This paper also mentions that the MoE layer was reintroduced into the Transformer architecture by the Mesh Tensorﬂow library (Shazeer et al., 2018) where MoE layers were introduced as a substitute of the FFN layers.\n3. [Source 2, Chunk 24] - This paper further mentions that GShard (Lepikhin et al., 2020), which extended the XLA compiler, used the MoE Transformer to dramatically improve machine translation across 100 languages.\n4. [Source 2, Chunk 24] - This paper also mentions that Fan et al. (2021) chooses a different deterministic MoE strategy to split the model parameters into non-overlapping groups of languages.\n5. [Source 4, Chunk 56] - This paper mentions that Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy Davis, Quoc Le, Geoffrey Hinton, and Jeff Dean. Outrageously large neural networks: The sparsely-gated mixture-of-experts layer. arXiv preprint arXiv:1701.06538, 2017.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Switch Transformers",
+      "T5"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system provides a comprehensive list of papers using MoE architectures, with accurate citations and proper grounding in the provided sources.",
+    "latency_ms": 10974.2,
+    "rag_tokens": 3247,
+    "judge_tokens": 835,
+    "retrieved_papers": [
+      "2101.03961",
+      "2101.03961",
+      "1910.10683",
+      "2101.03961",
+      "2101.03961"
+    ],
+    "expected_papers": [
+      "2101.03961"
+    ]
+  },
+  {
+    "id": "c008",
+    "type": "connection",
+    "question": "Which papers use multi-modal or contrastive pretraining objectives?",
+    "answer": "Based on the provided sources, the following papers use multi-modal or contrastive pretraining objectives:\n\n- Learning Transferable Visual Models (CLIP) (2103.00020) [Source 1]: This paper uses a multi-modal pre-training objective for text-image retrieval.\n- Virtex: Learning visual representations from textual annotations [Source 3]: This paper uses a multi-modal pre-training objective for learning visual representations from textual annotations.\n- Learning visual representations using images with captions [Source 5]: This paper uses a multi-modal pre-training objective for learning visual representations using images with captions.\n- Improving language understanding by generative pre-training [Source 5]: This paper uses a contrastive pre-training objective for improving language understanding.\n- Exploring the limits of transfer learning with a unified text-to-text transformer [Source 5]: This paper uses a contrastive pre-training objective for exploring the limits of transfer learning.\n- Do imagenet classifiers generalize to imagenet? [Source 5]: This paper uses a contrastive pre-training objective for investigating the generalization of imagenet classifiers.\n\nThe provided sources do not contain enough information to determine which papers use multi-modal or contrastive pretraining objectives beyond the ones mentioned above.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "CLIP"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly identifies multiple papers using multi-modal or contrastive pretraining objectives and properly cites the sources, but notes the limitations of the provided information.",
+    "latency_ms": 10246.0,
+    "rag_tokens": 3105,
+    "judge_tokens": 738,
+    "retrieved_papers": [
+      "2103.00020",
+      "2103.00020",
+      "2103.00020",
+      "2103.00020",
+      "2103.00020"
+    ],
+    "expected_papers": [
+      "2103.00020"
+    ]
+  },
+  {
+    "id": "c009",
+    "type": "connection",
+    "question": "Which papers propose alternatives specifically to the softmax computation in attention?",
+    "answer": "Based on the provided sources, the following papers propose alternatives specifically to the softmax computation in attention:\n\n1. [Source 4] Paper: Rethinking Attention with Performers (2006.16236) - This paper proposes linear attention, which linearizes the softmax attention computation. The authors show that linear attention can be computed more efficiently than softmax attention, with a computational complexity of O(NDM) multiplications and additions.\n2. [Source 5] Paper: Reformer: The Efficient Transformer (2001.04451) - This paper proposes a memory-efﬁcient attention mechanism, which avoids materializing the QK T matrix in memory. Instead, it computes the attention for each query separately, using a memory-efﬁcient implementation of attention that only uses memory proportional to the length of the sequence.\n\nNote that the other papers mentioned in the sources do not propose alternatives to the softmax computation in attention.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 0.5,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system accurately identifies papers proposing alternatives to softmax computation in attention and properly cites the sources.",
+    "latency_ms": 10572.5,
+    "rag_tokens": 3118,
+    "judge_tokens": 687,
+    "retrieved_papers": [
+      "2006.16236",
+      "1706.03762",
+      "2003.05997",
+      "2006.16236",
+      "2001.04451"
+    ],
+    "expected_papers": [
+      "2005.12872",
+      "2006.16236"
+    ]
+  },
+  {
+    "id": "c010",
+    "type": "connection",
+    "question": "Which papers use a distillation or compression approach to reduce Transformer model size?",
+    "answer": "Based on the provided sources, the following papers use a distillation or compression approach to reduce Transformer model size:\n\n1. **DistilBERT: A Distilled Version of BERT (1910.01108)**: This paper uses a distillation approach to reduce the size of a BERT model by 40%, while retaining 97% of its language understanding capabilities. [Source 3]\n2. **DistilBERT: A Distilled Version of BERT (1910.01108)**: The paper also mentions that other compression techniques have been studied, such as pruning and quantization, but these are orthogonal to the present work. [Source 1]\n3. **ALBERT: A Lite BERT (1909.11942)**: This paper uses a factorized embedding parameterization to reduce the number of parameters in a BERT model, making it significantly smaller. [Source 5]\n4. **DistilBERT: A Distilled Version of BERT (1910.01108)**: The paper also mentions that the distillation approach used in this work is different from the traditional distillation approach, which is used to build task-specific models. [Source 3]\n\nThe provided sources do not contain enough information to determine if any other papers use a distillation or compression approach to reduce Transformer model size.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "ALBERT",
+      "DistilBERT"
+    ],
+    "retrieval_recall": 1.0,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly identifies and cites relevant papers, and accurately describes their contributions, while also correctly stating the limitations of the provided sources.",
+    "latency_ms": 9277.8,
+    "rag_tokens": 3195,
+    "judge_tokens": 758,
+    "retrieved_papers": [
+      "1910.01108",
+      "1909.11942",
+      "1910.01108",
+      "1910.01108",
+      "1909.11942"
+    ],
+    "expected_papers": [
+      "1910.01108"
+    ]
+  },
+  {
+    "id": "m001",
+    "type": "multi_hop",
+    "question": "How did efficient attention methods evolve chronologically from 2019 to 2021, and what core problem do they all address?",
+    "answer": "The core problem that efficient attention methods address is the limitation of the standard self-attention mechanism in processing long sequences, which leads to high computational complexity and memory requirements.\n\n[Source 3] Chunk 1 states that the standard self-attention mechanism has a quadratic memory and time complexity O(N^2), which disrupts temporal coherence and hinders the capturing of long-term dependencies.\n\nEfficient attention methods evolved chronologically as follows:\n\n1. In 2019, researchers started to address the limitations of the standard self-attention mechanism. For example, Dai et al. (2019) proposed attending to memories from previous contexts, albeit at the expense of computational efficiency.\n[Source 3] Chunk 1\n2. In 2019, Child et al. (2019) introduced sparse factorizations of the attention matrix to reduce the self-attention complexity to O(N√N).\n[Source 3] Chunk 1\n3. In 2020, Kitaev et al. (2020) further reduced the complexity to O(N log N) using locality-sensitive hashing.\n[Source 3] Chunk 1\n4. In 2020, the linear transformer model was introduced, which significantly reduces the memory footprint and scales linearly with respect to the context length.\n[Source 3] Chunk 1\n\nThe provided sources do not contain enough information to answer the question about the specific improvements made to the training regime and pre-training BERT.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Big Bird",
+      "Reformer",
+      "Performers",
+      "Linformer",
+      "Longformer"
+    ],
+    "retrieval_recall": 0.3333333333333333,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides a mostly correct and well-supported answer, but lacks specific details about the chronological evolution of efficient attention methods.",
+    "latency_ms": 11066.4,
+    "rag_tokens": 3204,
+    "judge_tokens": 843,
+    "retrieved_papers": [
+      "2002.12327",
+      "2002.12327",
+      "2006.16236",
+      "2002.12327",
+      "2002.12327"
+    ],
+    "expected_papers": [
+      "1901.02860",
+      "2001.04451",
+      "2005.00743",
+      "2002.12327",
+      "2005.12872",
+      "2006.16236"
+    ]
+  },
+  {
+    "id": "m002",
+    "type": "multi_hop",
+    "question": "What did RoBERTa and ALBERT each discover about BERT's original training, and how do their conclusions differ?",
+    "answer": "Based on the provided sources, here are the discoveries made by RoBERTa and ALBERT about BERT's original training:\n\nRoBERTa:\n- RoBERTa outperforms BERT on the RACE reading comprehension task and ClueWeb09-B document ranking task, as shown in Table 2 of [Source 5]. \n- RoBERTa achieves a RACE Accuracy of 83.2, 86.5, and 81.8 for Middle, High, and overall, respectively, compared to BERT's 72.0, 76.6, and 70.1 [Source 5].\n\nALBERT:\n- ALBERT involves increasing the model hidden size from 1024 to 2048/4096, which substantially increases the amount of computation in terms of FLOPs [Source 5].\n- Due to the substantial increase in computation, it is hard to lead to scientific conclusions about ALBERT's performance compared to BERT [Source 5].\n\nComparing the conclusions of RoBERTa and ALBERT, we can see that RoBERTa's conclusions are based on its performance on specific tasks, whereas ALBERT's conclusions are limited due to the substantial increase in computation.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "RoBERTa",
+      "ELECTRA",
+      "ALBERT",
+      "XLNet",
+      "Big Bird",
+      "DistilBERT",
+      "PET"
+    ],
+    "retrieval_recall": 0.0,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system accurately summarizes the discoveries of RoBERTa and ALBERT, but misinterprets ALBERT's conclusions as being limited due to computation, whereas the reference answer states that ALBERT reduces parameters to enable training larger hidden dimensions.",
+    "latency_ms": 10300.3,
+    "rag_tokens": 3177,
+    "judge_tokens": 798,
+    "retrieved_papers": [
+      "1906.08237",
+      "2003.10555",
+      "2002.12327",
+      "2002.12327",
+      "1906.08237"
+    ],
+    "expected_papers": [
+      "1810.04805",
+      "1907.11692",
+      "1909.11942"
+    ]
+  },
+  {
+    "id": "m003",
+    "type": "multi_hop",
+    "question": "How do Reformer and Linformer each reduce attention complexity, and what assumption does each rely on?",
+    "answer": "I'll address each part of the question separately.\n\n**How do Reformer and Linformer each reduce attention complexity?**\n\n[Source 1] describes how the Reformer reduces attention complexity by using Locality Sensitive Hashing (LSH) attention, which allows for faster computation of attention weights. This is evident from the statement: \"LSH attention speed remains flat\" [Source 1].\n\n[Source 2] describes how the Linformer reduces attention complexity by using linear attention, which scales linearly with the sequence length unlike softmax attention, which scales quadratically. This is evident from the statement: \"Linear and Reformer models scale linearly with the sequence length unlike softmax which scales with the square of the sequence length both in memory and time\" [Source 2].\n\n**What assumption does each rely on?**\n\n[Source 1] does not explicitly mention any assumptions made by the Reformer. However, it does mention that the Reformer's memory-efﬁcient implementation of attention relies on the fact that the QK T matrix does not need to be fully materialized in memory. This is evident from the statement: \"The attention can indeed be computed for each query qi separately, only calculating softmax( qiKT √dk )V once in memory, and then re-computing it on the backward pass when needed for gradients\" [Source 5].\n\n[Source 2] does not explicitly mention any assumptions made by the Linformer. However, it does mention that the linear attention method relies on the fact that the attention weights can be computed using a linear function, which is faster and more efficient than the softmax attention method. This is evident from the statement: \"Linear converges smoothly and reaches a lower loss than lsh due to the lack of noise introduced by hashing\" [Source 2].\n\n**Note:** The provided sources do not contain enough information to answer the question about the assumptions made by the Reformer and Linformer.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "Big Bird",
+      "Reformer",
+      "Performers",
+      "Linformer",
+      "Longformer"
+    ],
+    "retrieval_recall": 0.5,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides mostly correct information about Reformer and Linformer's attention complexity reduction methods, but fails to accurately describe their underlying assumptions.",
+    "latency_ms": 10988.3,
+    "rag_tokens": 3138,
+    "judge_tokens": 932,
+    "retrieved_papers": [
+      "2001.04451",
+      "2006.16236",
+      "2006.16236",
+      "2005.00743",
+      "2001.04451"
+    ],
+    "expected_papers": [
+      "2001.04451",
+      "2005.12872"
+    ]
+  },
+  {
+    "id": "m004",
+    "type": "multi_hop",
+    "question": "How do ViT and CLIP differ in how they use the Transformer for images, and what pretraining objective does each use?",
+    "answer": "How do ViT and CLIP differ in how they use the Transformer for images, and what pretraining objective does each use?\n\n**ViT (Source 1, Source 4)**\n\nViT uses the Transformer for images by processing the input image as a sequence of patches. The patches are linearly projected into a lower-dimensional space, and a learned position embedding is added to the patch representations. Self-attention allows ViT to integrate information across the entire image even in the lowest layers. The \"attention distance\" is analogous to receptive field size in CNNs, and some heads attend to most of the image already in the lowest layers.\n\n**CLIP (Source 3, Source 5)**\n\nCLIP uses the Transformer for images by training a vision model that requires nearly 100x more compute per prediction than Visual N-Grams. CLIP is a significant step towards flexible and practical zero-shot computer vision classifiers. The comparison to Visual N-Grams is meant for contextualizing the performance of CLIP and should not be interpreted as a direct methods comparison.\n\n**Pretraining Objective**\n\n**ViT (Source 1)**\n\nViT is pre-trained on random subsets of 9M, 30M, and 90M as well as the full JFT-300M dataset. The pretraining objective is not explicitly stated in the provided sources.\n\n**CLIP (Source 3)**\n\nCLIP is pre-trained on a dataset that is 10x larger than Visual N-Grams, and the vision model requires nearly 100x more compute per prediction than Visual N-Grams. The pretraining objective is not explicitly stated in the provided sources.\n\n**Comparison**\n\nThe provided sources do not contain enough information to compare the pretraining objectives of ViT and CLIP.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": 1.0,
+    "correctness": 2,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 6,
+    "judge_reasoning": "The system provides mostly correct information, but lacks explicit pretraining objectives for both models.",
+    "latency_ms": 10606.9,
+    "rag_tokens": 3301,
+    "judge_tokens": 877,
+    "retrieved_papers": [
+      "2010.11929",
+      "2010.11929",
+      "2103.00020",
+      "2010.11929",
+      "2103.00020"
+    ],
+    "expected_papers": [
+      "2010.11929",
+      "2103.00020"
+    ]
+  },
+  {
+    "id": "m005",
+    "type": "multi_hop",
+    "question": "Which papers modified BERT's pretraining objective rather than its architecture, and what specific change did each make?",
+    "answer": "Based on the provided sources, the papers that modified BERT's pretraining objective rather than its architecture are:\n\n1. RoBERTa (Source 4): The authors modified the pretraining objective by removing the next sentence prediction objective, training on longer sequences, and dynamically changing the masking pattern applied to the training data.\n\nThe specific changes made by RoBERTa are:\n- Removing the next sentence prediction objective.\n- Training on longer sequences.\n- Dynamically changing the masking pattern applied to the training data.\n\nThe other papers mentioned in the sources (BERT, OpenAI GPT, and XLNet) did not modify the pretraining objective, but rather compared their results to BERT's or modified other aspects of the model.\n\nThe provided sources do not contain enough information to answer the question about which papers modified BERT's pretraining objective rather than its architecture, beyond the information provided in Source 4.",
+    "retrieval_mode": "hybrid",
+    "graph_papers_used": [
+      "RoBERTa",
+      "BERT"
+    ],
+    "retrieval_recall": 0.3333333333333333,
+    "correctness": 0,
+    "grounding": 0,
+    "citation_quality": 0,
+    "total_score": 0,
+    "judge_reasoning": "The system incorrectly identifies RoBERTa's changes and fails to accurately describe the modifications made by XLNet and ELECTRA, and also incorrectly states that the provided sources lack information about these papers.",
+    "latency_ms": 10409.6,
+    "rag_tokens": 2746,
+    "judge_tokens": 719,
+    "retrieved_papers": [
+      "1810.04805",
+      "1907.11692",
+      "1907.11692",
+      "1907.11692",
+      "1810.04805"
+    ],
+    "expected_papers": [
+      "1907.11692",
+      "1906.08237",
+      "2003.05997"
+    ]
+  },
+  {
+    "id": "o001",
+    "type": "out_of_scope",
+    "question": "What is the capital of France?",
+    "answer": "The provided sources do not contain enough information to answer this question.",
+    "retrieval_mode": "below_threshold",
+    "graph_papers_used": [],
+    "retrieval_recall": null,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledged the lack of information in the provided sources.",
+    "latency_ms": 38.1,
+    "rag_tokens": 0,
+    "judge_tokens": 448,
+    "retrieved_papers": [
+      "1901.02860",
+      "2005.14165",
+      "2003.05997",
+      "2003.05997",
+      "1910.10683"
+    ],
+    "expected_papers": []
+  },
+  {
+    "id": "o002",
+    "type": "out_of_scope",
+    "question": "Who won the 2020 US presidential election?",
+    "answer": "The provided sources do not contain enough information to answer this question.",
+    "retrieval_mode": "below_threshold",
+    "graph_papers_used": [],
+    "retrieval_recall": null,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledged the lack of information in the provided sources.",
+    "latency_ms": 63.6,
+    "rag_tokens": 0,
+    "judge_tokens": 451,
+    "retrieved_papers": [
+      "1907.11692",
+      "1810.04805",
+      "2005.14165",
+      "2103.00020",
+      "1810.04805"
+    ],
+    "expected_papers": []
+  },
+  {
+    "id": "o003",
+    "type": "out_of_scope",
+    "question": "How does AlphaFold predict protein structure?",
+    "answer": "The provided sources do not contain enough information to answer this question.",
+    "retrieval_mode": "below_threshold",
+    "graph_papers_used": [],
+    "retrieval_recall": null,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledged the lack of information in the provided sources.",
+    "latency_ms": 35.4,
+    "rag_tokens": 0,
+    "judge_tokens": 449,
+    "retrieved_papers": [
+      "1910.10683",
+      "1910.10683",
+      "2003.05997",
+      "1810.04805",
+      "1907.11692"
+    ],
+    "expected_papers": []
+  },
+  {
+    "id": "o004",
+    "type": "out_of_scope",
+    "question": "How do I set up a Python virtual environment?",
+    "answer": "The provided sources do not contain enough information to answer this question.",
+    "retrieval_mode": "below_threshold",
+    "graph_papers_used": [],
+    "retrieval_recall": null,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledges the lack of information in the provided sources.",
+    "latency_ms": 42.7,
+    "rag_tokens": 0,
+    "judge_tokens": 451,
+    "retrieved_papers": [
+      "2005.12872",
+      "2103.00020",
+      "2103.00020",
+      "2103.00020",
+      "2101.03961"
+    ],
+    "expected_papers": []
+  },
+  {
+    "id": "o005",
+    "type": "out_of_scope",
+    "question": "What are the main differences between PyTorch and TensorFlow?",
+    "answer": "The provided sources do not contain enough information to answer the question about the main differences between PyTorch and TensorFlow.",
+    "retrieval_mode": "vector_only",
+    "graph_papers_used": [],
+    "retrieval_recall": null,
+    "correctness": 3,
+    "grounding": 2,
+    "citation_quality": 2,
+    "total_score": 7,
+    "judge_reasoning": "The system correctly acknowledges the lack of information in the provided sources.",
+    "latency_ms": 9683.5,
+    "rag_tokens": 2966,
+    "judge_tokens": 463,
+    "retrieved_papers": [
+      "2010.11929",
+      "1706.03762",
+      "2103.00020",
+      "1810.04805",
+      "2101.03961"
+    ],
+    "expected_papers": []
+  }
+]

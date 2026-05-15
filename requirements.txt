@@ -1,0 +1,12 @@
+pypdf
+sentence-transformers
+python-dotenv
+chromadb
+tiktoken
+tqdm
+groq
+networkx
+httpx
+fastapi
+uvicorn[standard]
+python-multipart
