@@ -34,22 +34,39 @@
   .ask-btn:active { transform: scale(.97); }
   .ask-btn:disabled { background: #a5b4fc; cursor: not-allowed; transform: none; }
 
+  .hyde-row {
+    font-size: 13px; color: #94a3b8; margin-top: 10px;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .hyde-row input[type=checkbox] { cursor: pointer; accent-color: #6366f1; }
+
   .examples { margin-top: 16px; }
   .examples-label { font-size: 0.78rem; color: #94a3b8; margin-bottom: 8px; }
   .example-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; align-items: center; }
   .type-pill {
     font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: 3px 8px; border-radius: 6px; min-width: 68px; text-align: center;
+    padding: 3px 8px; border-radius: 6px; min-width: 80px; text-align: center;
   }
-  .pill-factual { background: #dbeafe; color: #1d4ed8; }
   .pill-connection { background: #d1fae5; color: #065f46; }
-  .pill-multihop { background: #fef3c7; color: #92400e; }
+  .pill-multihop  { background: #fef3c7; color: #92400e; }
+  .pill-factual   { background: #dbeafe; color: #1d4ed8; }
   button.ex {
     background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px;
     padding: 4px 13px; font-size: 0.78rem; color: #475569; cursor: pointer;
     transition: border-color .12s, color .12s, background .12s;
   }
   button.ex:hover { border-color: #6366f1; color: #6366f1; background: #f0f0ff; }
+
+  /* Graph win banner */
+  .graph-win {
+    background: #0f2d1a; border: 1px solid #1a5c30; border-radius: 12px;
+    padding: 16px 20px; margin: 16px 0; display: none;
+  }
+  .graph-win-label {
+    font-size: 11px; color: #4ade80; font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 10px;
+  }
+  .graph-win-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
   /* Results grid */
   .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -74,17 +91,18 @@
   .ok   { color: #059669; font-weight: 600; }
   .warn { color: #d97706; font-weight: 600; }
 
-  /* Answer box — rendered paragraphs */
   .answer-box {
     background: #fafafa; border: 1px solid #f1f5f9; border-radius: 10px;
-    padding: 16px; font-size: 0.875rem; line-height: 1.7; max-height: 400px;
+    padding: 16px; font-size: 0.875rem; line-height: 1.7; max-height: 380px;
     overflow-y: auto; color: #1e293b;
   }
   .answer-box p { margin-bottom: 10px; }
   .answer-box p:last-child { margin-bottom: 0; }
-  .src-ref { font-size: 0.7rem; color: #6366f1; font-weight: 600;
-             background: #ede9fe; border-radius: 4px; padding: 1px 5px;
-             margin-left: 3px; vertical-align: super; }
+  .src-ref {
+    font-size: 0.68rem; color: #6366f1; font-weight: 700;
+    background: #ede9fe; border-radius: 4px; padding: 1px 5px;
+    margin-left: 3px; vertical-align: super;
+  }
 
   .section-label { font-size: 0.68rem; font-weight: 700; color: #94a3b8;
                    text-transform: uppercase; letter-spacing: .06em; margin: 14px 0 7px; }
@@ -93,12 +111,10 @@
   .chip { font-size: 0.73rem; border-radius: 14px; padding: 3px 11px; font-weight: 500; }
   .chip-plain  { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
   .chip-graph  { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-  .chip-extra  { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
 
   .sub-qs { font-size: 0.8rem; color: #475569; padding-left: 16px; }
   .sub-qs li { margin-bottom: 4px; }
 
-  /* Graph insight card */
   .insight-card {
     background: #fff; border-radius: 16px; padding: 20px 24px;
     box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-top: 16px;
@@ -132,38 +148,49 @@
   <div class="search-card">
     <h2>Ask a question about AI research papers</h2>
     <div class="input-row">
-      <textarea id="q" placeholder="Try: Which papers build on BERT?  or  How does the Reformer reduce memory?"></textarea>
+      <textarea id="q" placeholder="Try: Which papers build on BERT?">Which papers build on BERT?</textarea>
       <button class="ask-btn" id="askBtn" onclick="ask()">Ask</button>
     </div>
+    <label class="hyde-row">
+      <input type="checkbox" id="hydeToggle">
+      Enable HyDE — generates a hypothetical answer before searching (slower, more accurate on factual questions)
+    </label>
     <div class="examples">
       <div class="examples-label">Try an example to see the graph in action:</div>
+      <!-- Connection first — shows the biggest difference -->
+      <div class="example-row">
+        <span class="type-pill pill-connection">Connection ★</span>
+        <button class="ex" onclick="fill(this)">Which papers build on BERT?</button>
+        <button class="ex" onclick="fill(this)">Which papers address the quadratic attention complexity problem?</button>
+        <button class="ex" onclick="fill(this)">Which papers apply Transformers to vision tasks?</button>
+      </div>
+      <div class="example-row">
+        <span class="type-pill pill-multihop">Multi-hop</span>
+        <button class="ex" onclick="fill(this)">How do Reformer and Linformer each reduce attention complexity?</button>
+        <button class="ex" onclick="fill(this)">What did RoBERTa and ALBERT each discover about BERT training?</button>
+        <button class="ex" onclick="fill(this)">How did efficient attention methods evolve from 2019 to 2021?</button>
+      </div>
       <div class="example-row">
         <span class="type-pill pill-factual">Factual</span>
         <button class="ex" onclick="fill(this)">What is multi-head attention?</button>
         <button class="ex" onclick="fill(this)">How many parameters does GPT-3 have?</button>
         <button class="ex" onclick="fill(this)">How does DistilBERT use knowledge distillation?</button>
       </div>
-      <div class="example-row">
-        <span class="type-pill pill-connection">Connection ★</span>
-        <button class="ex" onclick="fill(this)">Which papers build on BERT?</button>
-        <button class="ex" onclick="fill(this)">Which papers use locality-sensitive hashing?</button>
-        <button class="ex" onclick="fill(this)">Which papers apply Transformers to vision tasks?</button>
-        <button class="ex" onclick="fill(this)">Which papers use mixture-of-experts?</button>
-      </div>
-      <div class="example-row">
-        <span class="type-pill pill-multihop">Multi-hop</span>
-        <button class="ex" onclick="fill(this)">How do Reformer and Linformer each reduce attention complexity?</button>
-        <button class="ex" onclick="fill(this)">How did efficient attention methods evolve from 2019 to 2021?</button>
-      </div>
     </div>
   </div>
 
   <div id="loading" class="loading" style="display:none">
-    <span class="spinner"></span>Running both pipelines — ~25 seconds…
+    <span class="spinner"></span>Running both pipelines in parallel — ~20 seconds…
   </div>
   <div id="err" class="error-card" style="display:none"></div>
 
   <div id="results">
+    <!-- Graph win banner — the key demo feature -->
+    <div class="graph-win" id="graphWin">
+      <div class="graph-win-label">GRAPH FOUND THESE PAPERS THAT PLAIN RAG MISSED</div>
+      <div class="graph-win-chips" id="graphOnlyPapers"></div>
+    </div>
+
     <div class="columns">
       <!-- Plain RAG -->
       <div class="panel plain">
@@ -194,12 +221,10 @@
       </div>
     </div>
 
-    <!-- Graph insight -->
+    <!-- Insight card -->
     <div class="insight-card" id="insight" style="display:none">
       <h3 id="insight-title"></h3>
       <p id="insight-text"></p>
-      <div class="section-label" style="margin-top:12px" id="extra-label" style="display:none">Papers found only via graph traversal (missed by plain RAG)</div>
-      <div class="chips" id="extra-chips" style="margin-top:6px"></div>
     </div>
   </div>
 </div>
@@ -216,39 +241,28 @@ function badgeLabel(m) {
   return { hybrid: "Graph + Vector", decomposed: "Decomposed", vector_only: "Vector only", below_threshold: "Below threshold" }[m] || m;
 }
 
-// Convert raw LLM answer to clean HTML paragraphs with styled [Source N] refs
 function renderAnswer(el, text) {
-  // Remove "The provided sources..." if it's the only content (below_threshold)
   if (!text || text.startsWith("The provided sources do not")) {
     el.innerHTML = `<p style="color:#94a3b8;font-style:italic">${text || "No answer."}</p>`;
     return;
   }
-
-  // Split on blank lines to get paragraphs, skip lines that are purely "[Source N] Chunk X:"
   const lines = text.split("\n");
-  let html = "";
-  let buf = "";
-
+  let html = "", buf = "";
   const flush = () => {
     const t = buf.trim();
     if (t) {
-      // Inline [Source N] as small superscript badge
-      const marked = t.replace(/\[Source\s*(\d+)\]/g,
-        (_, n) => `<span class="src-ref">[${n}]</span>`);
+      const marked = t.replace(/\[Source\s*(\d+)\]/g, (_, n) => `<span class="src-ref">[${n}]</span>`);
       html += `<p>${marked}</p>`;
     }
     buf = "";
   };
-
   for (const raw of lines) {
     const line = raw.trim();
-    // Skip bare chunk header lines like "[Source 3] Chunk 5:"
     if (/^\[Source\s*\d+\]\s+Chunk\s+\d+:?\s*$/.test(line)) { flush(); continue; }
     if (line === "") { flush(); continue; }
     buf += (buf ? " " : "") + line;
   }
   flush();
-
   el.innerHTML = html || `<p>${text}</p>`;
 }
 
@@ -259,7 +273,7 @@ function chip(text, cls) {
   return s;
 }
 
-function meta(latency, tokens, grounded) {
+function metaHtml(latency, tokens, grounded) {
   const g = grounded
     ? `<span class="ok">✓ Grounded</span>`
     : `<span class="warn">⚠ Ungrounded claims</span>`;
@@ -269,6 +283,7 @@ function meta(latency, tokens, grounded) {
 async function ask() {
   const q = document.getElementById("q").value.trim();
   if (!q) return;
+  const useHyde = document.getElementById("hydeToggle").checked;
 
   document.getElementById("askBtn").disabled = true;
   document.getElementById("results").style.display = "none";
@@ -279,7 +294,7 @@ async function ask() {
     const res = await fetch(`${API_URL}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q, use_hyde: true }),
+      body: JSON.stringify({ question: q, use_hyde: useHyde }),
     });
     if (!res.ok) { const e = await res.json(); throw new Error(e.detail || `HTTP ${res.status}`); }
     render(await res.json());
@@ -295,20 +310,32 @@ async function ask() {
 function render(d) {
   const p = d.plain_rag, h = d.hybrid_rag, c = d.comparison;
 
+  // Graph win banner — the key demo visual
+  const graphOnly = c.graph_only_papers || [];
+  const graphWin = document.getElementById("graphWin");
+  const graphOnlyDiv = document.getElementById("graphOnlyPapers");
+  if (graphOnly.length > 0) {
+    graphOnlyDiv.innerHTML = graphOnly.map(name =>
+      `<span style="background:#166534;color:#bbf7d0;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;">${name}</span>`
+    ).join("");
+    graphWin.style.display = "block";
+  } else {
+    graphWin.style.display = "none";
+  }
+
   // Plain panel
-  document.getElementById("plain-meta").innerHTML = meta(p.latency_ms, p.tokens_used, p.grounded);
+  document.getElementById("plain-meta").innerHTML = metaHtml(p.latency_ms, p.tokens_used, p.grounded);
   renderAnswer(document.getElementById("plain-ans"), p.answer);
   const pc = document.getElementById("plain-chips"); pc.innerHTML = "";
   (c.plain_papers || []).forEach(t => pc.appendChild(chip(t, "chip-plain")));
 
   // Hybrid panel
-  document.getElementById("hybrid-meta").innerHTML = meta(h.latency_ms, h.tokens_used, h.grounded);
+  document.getElementById("hybrid-meta").innerHTML = metaHtml(h.latency_ms, h.tokens_used, h.grounded);
   renderAnswer(document.getElementById("hybrid-ans"), h.answer);
   const hb = document.getElementById("h-badge");
   hb.textContent = badgeLabel(h.retrieval_mode);
   hb.className = `badge ${badgeClass(h.retrieval_mode)}`;
 
-  // Sub-questions
   const sqSec = document.getElementById("sub-qs-section");
   const sqList = document.getElementById("sub-qs-list"); sqList.innerHTML = "";
   if (h.sub_questions?.length) {
@@ -316,39 +343,29 @@ function render(d) {
     sqSec.style.display = "block";
   } else { sqSec.style.display = "none"; }
 
-  // Hybrid paper chips
   const hc = document.getElementById("hybrid-chips"); hc.innerHTML = "";
   const graphSet = new Set(c.graph_found || []);
-  const extraSet = new Set(c.hybrid_only_papers || []);
   (c.hybrid_papers || []).forEach(t => {
-    const cls = graphSet.has(t) ? "chip-graph" : extraSet.has(t) ? "chip-extra" : "chip-plain";
-    hc.appendChild(chip(t, cls));
+    hc.appendChild(chip(t, graphSet.has(t) ? "chip-graph" : "chip-plain"));
   });
 
   // Insight card
   const ins = document.getElementById("insight");
-  const graphFound = c.graph_found || [];
-  const hybridOnly = c.hybrid_only_papers || [];
-  if (graphFound.length > 0 || h.sub_questions?.length > 0) {
+  if (graphOnly.length > 0 || h.sub_questions?.length > 0) {
     let title = "", text = "";
     if (h.retrieval_mode === "hybrid") {
-      title = `Graph traversal found ${graphFound.length} paper${graphFound.length !== 1 ? "s" : ""} that plain RAG missed`;
-      text = `The knowledge graph contains relationship triples like builds_on, uses_technique, and applies_to_domain. For this query, it identified [${graphFound.join(", ")}] through graph traversal, then ran a scoped vector search within those papers. Plain RAG's semantic search retrieved ${(c.plain_papers||[]).length} paper${(c.plain_papers||[]).length !== 1 ? "s" : ""} — the graph route surfaces relationships that embedding similarity alone cannot capture.`;
+      title = `Graph traversal found ${graphOnly.length} paper${graphOnly.length !== 1 ? "s" : ""} that semantic search missed`;
+      text = `The knowledge graph contains 128 relationship triples (builds_on, uses_technique, applies_to_domain, cites). For this query it identified [${(c.graph_found||[]).join(", ")}] through graph traversal, then ran a scoped vector search within those papers. Plain RAG's embedding similarity alone retrieved only ${(c.plain_papers||[]).length} paper${(c.plain_papers||[]).length !== 1 ? "s" : ""}.`;
     } else if (h.retrieval_mode === "decomposed") {
-      title = `Query decomposed into ${h.sub_questions.length} sub-questions for multi-hop synthesis`;
-      text = `This question requires synthesizing information from multiple papers simultaneously. The system broke it into ${h.sub_questions.length} targeted sub-questions, ran separate retrievals for each, then merged the results before generating a unified answer.`;
+      title = `Query decomposed into ${h.sub_questions.length} sub-questions for cross-paper synthesis`;
+      text = `This multi-hop question requires synthesizing information from multiple papers. The system broke it into ${h.sub_questions.length} targeted sub-questions, retrieved each separately, then generated a unified answer across all results.`;
     }
-    document.getElementById("insight-title").textContent = title;
-    document.getElementById("insight-text").textContent = text;
-
-    const ec = document.getElementById("extra-chips"); ec.innerHTML = "";
-    hybridOnly.forEach(t => ec.appendChild(chip(t, "chip-graph")));
-    document.getElementById("extra-label").style.display = hybridOnly.length ? "block" : "none";
-
-    ins.style.display = "block";
-  } else {
-    ins.style.display = "none";
-  }
+    if (title) {
+      document.getElementById("insight-title").textContent = title;
+      document.getElementById("insight-text").textContent = text;
+      ins.style.display = "block";
+    } else { ins.style.display = "none"; }
+  } else { ins.style.display = "none"; }
 
   document.getElementById("results").style.display = "block";
   document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
