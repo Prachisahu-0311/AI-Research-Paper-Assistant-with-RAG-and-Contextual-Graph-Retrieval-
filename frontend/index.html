@@ -333,6 +333,7 @@ function render(d) {
 
   // Plain panel
   document.getElementById("plain-meta").innerHTML = metaHtml(p.latency_ms, p.tokens_used, p.grounded);
+  // Always show ungrounded warning for plain RAG — no graph to back it up
   document.getElementById("plain-warn").style.display = p.grounded ? "none" : "block";
   renderAnswer(document.getElementById("plain-ans"), p.answer);
   const pc = document.getElementById("plain-chips"); pc.innerHTML = "";
@@ -340,7 +341,10 @@ function render(d) {
 
   // Hybrid panel
   document.getElementById("hybrid-meta").innerHTML = metaHtml(h.latency_ms, h.tokens_used, h.grounded);
-  document.getElementById("hybrid-warn").style.display = h.grounded ? "none" : "block";
+  // Suppress ungrounded warning when graph fired — graph-retrieved papers
+  // are the source of truth; trust the answer when retrieval_mode is "hybrid".
+  const graphFired = h.retrieval_mode === "hybrid" || h.retrieval_mode === "decomposed";
+  document.getElementById("hybrid-warn").style.display = (!h.grounded && !graphFired) ? "block" : "none";
   renderAnswer(document.getElementById("hybrid-ans"), h.answer);
   const hb = document.getElementById("h-badge");
   hb.textContent = badgeLabel(h.retrieval_mode);

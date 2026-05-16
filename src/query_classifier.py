@@ -7,6 +7,24 @@ import httpx
 
 _GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
+# In-process cache so the second classify_query call per query (hybrid_pipeline
+# calls it, then graph_query calls it again) is free — no extra API call.
+_CLASSIFY_CACHE: dict[str, dict] = {}
+
+# Keyword shortcuts for high-confidence connection queries — avoids LLM call
+# entirely for obvious patterns (faster, no rate-limit hit).
+_BUILDS_ON_SHORTCUTS = [
+    ("build on bert", "BERT"),
+    ("build upon bert", "BERT"),
+    ("builds on bert", "BERT"),
+    ("improve bert", "BERT"),
+    ("extend bert", "BERT"),
+    ("based on bert", "BERT"),
+    ("build on the transformer", "Attention Is All You Need"),
+    ("build on attention is all", "Attention Is All You Need"),
+    ("build upon the original transformer", "Attention Is All You Need"),
+]
+
 _SYSTEM = """You are a query router for a knowledge graph about AI research papers (Transformers/Attention).
 Classify questions into one of these types and extract the search target.
 
@@ -73,6 +91,20 @@ def classify_query(
     Returns {"type": str, "target": str | None}.
     Falls back to {"type": "factual", "target": None} on any error.
     """
+    # Return cached result immediately (avoids duplicate LLM call when
+    # hybrid_pipeline.py and graph_query() both classify the same question).
+    if question in _CLASSIFY_CACHE:
+        return _CLASSIFY_CACHE[question]
+
+    q_lower = question.lower()
+
+    # Instant keyword shortcuts for builds_on — no LLM call needed.
+    for pattern, target in _BUILDS_ON_SHORTCUTS:
+        if pattern in q_lower:
+            result = {"type": "builds_on", "target": target}
+            _CLASSIFY_CACHE[question] = result
+            return result
+
     # Keyword pre-filter: multi_hop patterns must be caught before builds_on patterns
     # because "modified BERT" would otherwise match builds_on.
     _MULTI_HOP_KEYWORDS = [
@@ -81,9 +113,10 @@ def classify_query(
         "what did each", "differ in how", "how do they differ",
         "compare", "comparison between", "contrast",
     ]
-    q_lower = question.lower()
     if any(k in q_lower for k in _MULTI_HOP_KEYWORDS):
-        return {"type": "multi_hop", "target": None}
+        result = {"type": "multi_hop", "target": None}
+        _CLASSIFY_CACHE[question] = result
+        return result
 
     if api_key is None:
         api_key = os.environ.get("GROQ_API_KEY", "")
@@ -116,7 +149,9 @@ def classify_query(
                 target = parsed.get("target")
                 if target in ("null", "", "none", "None"):
                     target = None
-                return {"type": qtype, "target": target}
+                result = {"type": qtype, "target": target}
+                _CLASSIFY_CACHE[question] = result
+                return result
             if r.status_code in (429, 413) and attempt == 0:
                 import re
                 m = re.search(r'try again in (?:(\d+)m)?(\d+(?:\.\d+)?)s', r.text)
