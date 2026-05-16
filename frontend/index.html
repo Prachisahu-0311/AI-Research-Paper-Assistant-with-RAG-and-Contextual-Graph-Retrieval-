@@ -342,9 +342,9 @@ function render(d) {
   // Hybrid panel
   document.getElementById("hybrid-meta").innerHTML = metaHtml(h.latency_ms, h.tokens_used, h.grounded);
   // Suppress ungrounded warning when graph fired — graph-retrieved papers
-  // are the source of truth; trust the answer when retrieval_mode is "hybrid".
-  const graphFired = h.retrieval_mode === "hybrid" || h.retrieval_mode === "decomposed";
-  document.getElementById("hybrid-warn").style.display = (!h.grounded && !graphFired) ? "block" : "none";
+  // boosted_count > 0 means the graph fired — trust the answer, suppress warning.
+  const boostedCount = h.retrieval_mode === "hybrid" ? 1 : (h.boosted_count || 0);
+  document.getElementById("hybrid-warn").style.display = (!h.grounded && boostedCount === 0) ? "block" : "none";
   renderAnswer(document.getElementById("hybrid-ans"), h.answer);
   const hb = document.getElementById("h-badge");
   hb.textContent = badgeLabel(h.retrieval_mode);
