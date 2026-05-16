@@ -199,6 +199,10 @@
           <span class="badge b-vector">Vector only</span>
         </div>
         <div class="meta" id="plain-meta"></div>
+        <div id="plain-warn" style="display:none;background:#2d1f00;border:1px solid #854d0e;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#fbbf24;">
+          ⚠️ This answer may contain information from outside the retrieved sources.
+          The system retrieved chunks that may not fully support all claims made below.
+        </div>
         <div class="answer-box" id="plain-ans"></div>
         <div class="section-label">Papers retrieved</div>
         <div class="chips" id="plain-chips"></div>
@@ -211,6 +215,10 @@
           <span class="badge" id="h-badge"></span>
         </div>
         <div class="meta" id="hybrid-meta"></div>
+        <div id="hybrid-warn" style="display:none;background:#2d1f00;border:1px solid #854d0e;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#fbbf24;">
+          ⚠️ This answer may contain information from outside the retrieved sources.
+          The system retrieved chunks that may not fully support all claims made below.
+        </div>
         <div id="sub-qs-section" style="display:none">
           <div class="section-label">Decomposed into</div>
           <ul class="sub-qs" id="sub-qs-list"></ul>
@@ -325,12 +333,14 @@ function render(d) {
 
   // Plain panel
   document.getElementById("plain-meta").innerHTML = metaHtml(p.latency_ms, p.tokens_used, p.grounded);
+  document.getElementById("plain-warn").style.display = p.grounded ? "none" : "block";
   renderAnswer(document.getElementById("plain-ans"), p.answer);
   const pc = document.getElementById("plain-chips"); pc.innerHTML = "";
   (c.plain_papers || []).forEach(t => pc.appendChild(chip(t, "chip-plain")));
 
   // Hybrid panel
   document.getElementById("hybrid-meta").innerHTML = metaHtml(h.latency_ms, h.tokens_used, h.grounded);
+  document.getElementById("hybrid-warn").style.display = h.grounded ? "none" : "block";
   renderAnswer(document.getElementById("hybrid-ans"), h.answer);
   const hb = document.getElementById("h-badge");
   hb.textContent = badgeLabel(h.retrieval_mode);
