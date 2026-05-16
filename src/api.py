@@ -142,9 +142,8 @@ async def query(req: QueryRequest):
                 "plain_papers": list(plain_paper_titles),
                 "hybrid_papers": list(hybrid_paper_titles),
                 "graph_found": graph_papers,
-                "graph_only_papers": list(
-                    set(graph_papers) - plain_paper_titles
-                ),
+                # Full-title papers hybrid retrieved that plain did NOT retrieve
+                "graph_only_papers": list(hybrid_paper_titles - plain_paper_titles),
             },
         }
 

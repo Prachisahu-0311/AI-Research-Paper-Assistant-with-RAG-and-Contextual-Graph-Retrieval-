@@ -136,8 +136,13 @@ def graph_query(G: nx.MultiDiGraph, question: str, use_llm: bool = True) -> list
         clf = classify_query(question)
         qtype, target = clf["type"], clf["target"]
 
-        if qtype == "factual" or qtype == "out_of_scope" or qtype == "multi_hop":
+        if qtype == "out_of_scope" or qtype == "multi_hop":
             return []
+
+        if qtype == "factual":
+            # Classifier may return "factual" as a rate-limit fallback; try
+            # keyword matching as a safety net before giving up.
+            return _keyword_graph_query(G, question)
 
         if qtype == "builds_on" and target:
             results = query_papers_building_on(G, target)
@@ -189,19 +194,21 @@ def hybrid_retrieve(
     if graph_papers:
         paper_ids = [_PAPER_NAME_TO_ID[p] for p in graph_papers if p in _PAPER_NAME_TO_ID]
 
-        # Scoped vector search within graph-found papers
-        scoped_chunks = vs.query_scoped(query_embedding, paper_ids, top_k=top_k)
+        # Get top-1 chunk per graph-identified paper so every paper the graph
+        # found is represented in context — a global top-k scoped search would
+        # return all chunks from the 2-3 highest-similarity papers and miss the rest.
+        per_paper: list[dict] = []
+        seen_ids: set[str] = set()
+        for pid in paper_ids:
+            chunks = vs.query_scoped(query_embedding, [pid], top_k=1)
+            for c in chunks:
+                if c["chunk_id"] not in seen_ids:
+                    per_paper.append(c)
+                    seen_ids.add(c["chunk_id"])
 
-        # Supplement with full vector search to fill any gap
-        if len(scoped_chunks) < top_k:
-            full_chunks = vs.query(query_embedding, top_k=top_k)
-            seen = {c["chunk_id"] for c in scoped_chunks}
-            for c in full_chunks:
-                if c["chunk_id"] not in seen and len(scoped_chunks) < top_k:
-                    scoped_chunks.append(c)
-                    seen.add(c["chunk_id"])
-
-        return scoped_chunks, graph_papers
+        # Sort by similarity; keep all graph-paper chunks (covers every identified paper)
+        per_paper.sort(key=lambda c: c["similarity"], reverse=True)
+        return per_paper, graph_papers
 
     # No graph match — pure vector search
     return vs.query(query_embedding, top_k=top_k), []
