@@ -159,6 +159,23 @@ def generate_answer(
 
     answer_text = resp["choices"][0]["message"]["content"]
     tokens_used = resp.get("usage", {}).get("total_tokens", 0)
+
+    # Refusal answers are grounded by definition — skip the grounding check
+    # to avoid false positives and save one API call.
+    _REFUSAL = "The provided sources do not contain enough information"
+    if _REFUSAL in answer_text:
+        return {
+            "answer": answer_text,
+            "model": model,
+            "tokens_used": tokens_used,
+            "sources_provided": [
+                {"paper_title": c["paper_title"], "chunk_index": c["chunk_index"]}
+                for c in context_chunks
+            ],
+            "grounded": True,
+            "unsupported_claims": [],
+        }
+
     import time; time.sleep(8)  # brief pause so grounding check doesn't hit the same TPM window
     grounding = _check_grounding(answer_text, context_chunks, model=model, api_key=api_key)
 

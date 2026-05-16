@@ -4,6 +4,16 @@ import statistics
 import tiktoken
 from pathlib import Path
 
+PAPER_YEARS = {
+    "1706.03762": 2017, "1810.04805": 2018, "1907.11692": 2019,
+    "1909.11942": 2019, "1910.01108": 2019, "1906.08237": 2019,
+    "2005.14165": 2020, "1910.10683": 2019, "1901.02860": 2019,
+    "2001.04451": 2020, "2005.12872": 2020, "2005.00743": 2020,
+    "2002.12327": 2020, "2006.16236": 2020, "1807.03819": 2018,
+    "2010.11929": 2020, "2103.00020": 2021, "2101.03961": 2021,
+    "2003.05997": 2020, "2003.10555": 2020,
+}
+
 
 def load_paper_titles(index_path: str = "data/papers/index.md") -> dict[str, str]:
     """Parse index.md and return {arxiv_id: title} dict."""
@@ -34,6 +44,9 @@ def chunk_text(
     step = chunk_size - overlap
     i = 0
 
+    year = PAPER_YEARS.get(paper_id, "unknown")
+    prefix = f"[Paper: {paper_title}, Year: {year}]\n"
+
     while i < len(tokens):
         chunk_tokens = tokens[i : i + chunk_size]
         if len(chunk_tokens) < 50:
@@ -43,7 +56,7 @@ def chunk_text(
             "paper_id": paper_id,
             "paper_title": paper_title,
             "chunk_index": chunk_index,
-            "text": enc.decode(chunk_tokens),
+            "text": prefix + enc.decode(chunk_tokens),
             "token_count": len(chunk_tokens),
         })
         chunk_index += 1
