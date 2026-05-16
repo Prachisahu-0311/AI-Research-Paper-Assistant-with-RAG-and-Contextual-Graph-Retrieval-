@@ -344,7 +344,7 @@ function render(d) {
   // Suppress ungrounded warning when graph fired — graph-retrieved papers
   // boosted_count > 0 means the graph fired — trust the answer, suppress warning.
   const boostedCount = h.retrieval_mode === "hybrid" ? 1 : (h.boosted_count || 0);
-  document.getElementById("hybrid-warn").style.display = (!h.grounded && boostedCount === 0) ? "block" : "none";
+  document.getElementById("hybrid-warn").style.display = (!h.grounded && boostedCount === 0 && h.retrieval_mode !== 'decomposed') ? "block" : "none";
   renderAnswer(document.getElementById("hybrid-ans"), h.answer);
   const hb = document.getElementById("h-badge");
   hb.textContent = badgeLabel(h.retrieval_mode);
