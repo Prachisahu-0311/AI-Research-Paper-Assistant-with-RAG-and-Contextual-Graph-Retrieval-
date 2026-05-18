@@ -2,6 +2,7 @@
 import json
 import os
 import re
+import time
 
 import httpx
 
@@ -33,9 +34,9 @@ def _call_groq(
     api_key: str,
 ) -> dict:
     """Make a Groq REST call. On 429, sleeps the exact retry-after time (capped at 120s)."""
-    import time
     payload = {"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
     for attempt in range(3):
+        # verify=False: corporate proxy presents a cert with hostname mismatch for api.groq.com
         with httpx.Client(timeout=30.0, verify=False) as client:
             r = client.post(
                 _GROQ_URL,
@@ -176,7 +177,9 @@ def generate_answer(
             "unsupported_claims": [],
         }
 
-    import time; time.sleep(8)  # brief pause so grounding check doesn't hit the same TPM window
+    # Groq free tier: 6 000 TPM. Wait before the grounding check so both calls
+    # don't land in the same 1-minute window and trigger a 429.
+    time.sleep(8)
     grounding = _check_grounding(answer_text, context_chunks, model=model, api_key=api_key)
 
     return {
